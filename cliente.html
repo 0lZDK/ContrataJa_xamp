@@ -1,0 +1,430 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ContrataJá - Encontre profissionais confiáveis perto de você</title>
+    <meta name="description" content="Compare, escolha e agende serviços com profissionais indicados. Rápido, seguro e sem complicação.">
+    <link rel="canonical" href="/cliente.html">
+    <link rel="stylesheet" href="styles.css?v=20250829-2">
+    <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/css/select2.min.css" rel="stylesheet" />
+</head>
+<body class="theme-cliente" data-role="cliente">
+    <header class="header">
+        <nav class="navbar">
+            <div class="navbar-container">
+                <div class="navbar-logo">
+                    <img src="images/logo_contrataja.png" alt="ContrataJá" class="logo-img" />
+                </div>
+                <div class="navbar-links">
+                    <a href="#servicos" class="nav-link">Principais serviços</a>
+                    <a href="#sobre" class="nav-link">O que é?</a>
+                    <a href="#como-funciona" class="nav-link">Como Funciona?</a>
+                </div>
+                <div class="navbar-buttons">
+                    <a href="cliente.html" class="btn-primary">Para Clientes</a>
+                    <a href="index.html" class="btn-secondary">Para Prestadores</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-container">
+                <div class="hero-logo">
+                    <img src="images/logo_contrataja.png" alt="ContrataJá" class="logo-img" />
+                </div>
+                <div class="hero-content">
+                    <h1 class="hero-title">
+                        <span class="desktop-text">Profissionais confiáveis,<br>quando você precisar</span>
+                        <span class="mobile-text">Peça serviços com confiança</span>
+                    </h1>
+                    <p class="hero-subtitle">
+                        <span class="desktop-text">Compare opções, escolha e agende em minutos</span>
+                        <span class="mobile-text">Encontre e agende em minutos</span>
+                    </p>
+                    
+                    <div class="search-container">
+                        <input type="text" class="search-input" placeholder="Digite seu endereço" data-desktop-placeholder="Em qual endereço você precisa" data-mobile-placeholder="Digite seu endereço">
+                        <button class="search-button" id="searchButton">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="11" cy="11" r="8" stroke="white" stroke-width="2"/>
+                                <path d="M21 21L16.65 16.65" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="servicos" class="services">
+            <div class="section-container">
+                <div class="section-header">
+                    <span class="section-tag">Principais serviços</span>
+                    <h2 class="section-title">Serviços mais buscados<br>para o seu dia a dia</h2>
+                    <button class="btn-link">Ver mais</button>
+                </div>
+                
+                <div class="services-grid">
+                    <div class="service-card" data-service="assistencia">
+                        <div class="service-image assistencia"></div>
+                        <div class="service-info">
+                            <h3>Assistência</h3>
+                            <p>Técnica</p>
+                        </div>
+                    </div>
+                    
+                    <div class="service-card" data-service="aulas">
+                        <div class="service-image aulas"></div>
+                        <div class="service-info">
+                            <h3>Aulas</h3>
+                            <p>Particulares</p>
+                        </div>
+                    </div>
+                    
+                    <div class="service-card" data-service="auto">
+                        <div class="service-image auto"></div>
+                        <div class="service-info">
+                            <h3>Auto</h3>
+                            <p>Serviços</p>
+                        </div>
+                    </div>
+                    
+                    <div class="service-card" data-service="consultoria">
+                        <div class="service-image consultoria"></div>
+                        <div class="service-info">
+                            <h3>Consultoria</h3>
+                            <p>Profissional</p>
+                        </div>
+                    </div>
+                    
+                    <div class="service-card" data-service="moda">
+                        <div class="service-image moda"></div>
+                        <div class="service-info">
+                            <h3>Moda</h3>
+                            <p>& Beleza</p>
+                        </div>
+                    </div>
+                    
+                    <div class="service-card" data-service="saude">
+                        <div class="service-image saude"></div>
+                        <div class="service-info">
+                            <h3>Saúde</h3>
+                            <p>& Bem-estar</p>
+                        </div>
+                    </div>
+                    
+                    <div class="service-card" data-service="domesticos">
+                        <div class="service-image domesticos"></div>
+                        <div class="service-info">
+                            <h3>Serviços</h3>
+                            <p>Domésticos</p>
+                        </div>
+                    </div>
+                    
+                    <div class="service-card" data-service="reforma">
+                        <div class="service-image reforma"></div>
+                        <div class="service-info">
+                            <h3>Reforma</h3>
+                            <p>& Reparos</p>
+                        </div>
+                    </div>
+                    
+                    <div class="service-card" data-service="eventos">
+                        <div class="service-image eventos"></div>
+                        <div class="service-info">
+                            <h3>Eventos</h3>
+                            <p>& Festas</p>
+                        </div>
+                    </div>
+                    
+                    <div class="service-card" data-service="design">
+                        <div class="service-image design"></div>
+                        <div class="service-info">
+                            <h3>Design</h3>
+                            <p>& Criação</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="services-cta">
+                    <a href="#" class="btn-primary" data-modal-trigger="true">Quero contratar</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="sobre" class="about">
+            <div class="section-container">
+                <div class="about-content">
+                    <div class="about-text">
+                        <div class="section-header">
+                            <span class="section-tag">O que somos ?</span>
+                            <h2 class="section-title">Serviços ao seu alcance,<br>com profissionais indicados</h2>
+                        </div>
+                        <p class="about-description">
+                            A ContrataJá conecta você aos melhores profissionais da sua região para resolver o que precisa, com agendamento e pagamento em um só lugar.
+                        </p>
+                    </div>
+                    <div class="about-image"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="guarantee">
+            <div class="guarantee-container">
+                <h2 class="guarantee-title">
+                    <span class="desktop-text">Peça sem medo:<br>se não ficar satisfeito,<br>devolvemos seu dinheiro!</span>
+                    <span class="mobile-text">Satisfação garantida ou seu dinheiro de volta</span>
+                </h2>
+            </div>
+        </section>
+
+        <section class="benefits">
+            <div class="section-container">
+                <div class="section-header center">
+                    <span class="section-tag">Benefícios</span>
+                    <h2 class="section-title">Contrate com praticidade e segurança</h2>
+                </div>
+                
+                <!-- reaproveitando os mesmos cards de benefícios -->
+                <div class="benefits-grid">
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <svg width="126" height="130" viewBox="0 0 126 130" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M63 10C40 10 20 30 20 50C20 70 40 90 63 90C86 90 106 70 106 50C106 30 86 10 63 10Z" fill="#183F81"/>
+                                <path d="M63 100C63 100 20 100 20 120H106C106 100 63 100 63 100Z" fill="#183F81"/>
+                            </svg>
+                        </div>
+                        <h3>Profissionais</h3>
+                        <p>Tenha em um só lugar os melhores profissionais à disposição para agendar visitas e solucionar os seus problemas.</p>
+                    </div>
+                    
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <svg width="64" height="120" viewBox="0 0 64 120" fill="none" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="8" y="12" width="48" height="96" rx="10" fill="#183F81"/>
+                            </svg>
+                        </div>
+                        <h3>Praticidade</h3>
+                        <p>Agende e acompanhe tudo sem burocracia: simples, rápido e seguro.</p>
+                    </div>
+                    
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="60" cy="60" r="50" fill="#183F81"/>
+                            </svg>
+                        </div>
+                        <h3>Confiança</h3>
+                        <p>Profissionais indicados, avaliados e com histórico de qualidade.</p>
+                    </div>
+                    
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="20" y="20" width="80" height="80" rx="16" fill="#183F81"/>
+                            </svg>
+                        </div>
+                        <h3>Suporte</h3>
+                        <p>Estamos ao seu lado para garantir um bom atendimento.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-logo">
+                <img src="images/logo_contrataja.png" alt="ContrataJá" class="logo-img" />
+            </div>
+            <p class="footer-text">ContrataJá LTDA. Todos os direitos reservados.</p>
+            <div class="footer-social">
+                <a href="#" class="social-link">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="2" y="2" width="28" height="28" rx="8" stroke="#0E244A" stroke-width="2"/>
+                        <circle cx="16" cy="16" r="7" stroke="#0E244A" stroke-width="2"/>
+                        <circle cx="23" cy="9" r="2" fill="#0E244A"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal do Formulário Mautic (Cliente) -->
+    <div id="mauticModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Quero contratar serviços</h2>
+                <button class="modal-close" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="formContainer">
+                    <div id="searchMessage" class="search-message" style="display: none;">
+                        <div class="message-content">
+                            <span class="message-icon">🔎</span>
+                            <p>Conte com a gente! Deixe seus dados e avisaremos assim que houver profissionais para sua região.</p>
+                        </div>
+                    </div>
+                    <div id="mauticform_wrapper_formlp" class="mauticform_wrapper">
+                        <form autocomplete="off" accept-charset="UTF-8" role="form" method="post" action="https://mautic.indiqueiapp.com.br/form/submit?formId=2" id="mauticform_formlp" data-mautic-form="formlp" data-mautic-estado-alias="estado1" data-mautic-cidade-alias="cidade1" data-mautic-categoria-alias="categoria" form-lp>
+                            <div class="mauticform-error" id="mauticform_formlp_error" style="display: none;"></div>
+                            <div class="mauticform-message" id="mauticform_formlp_message" style="display: none;"></div>
+                            <div class="mauticform-innerform">
+                                <div class="mauticform-page-wrapper mauticform-page-1" data-mautic-form-page="1">
+                                    
+                                    
+                                    <div id="mauticform_formlp_nome" class="mauticform-row mauticform-text mauticform-field-2 mauticform-required" data-validate="nome" data-validation-type="text">
+                                        <label id="mauticform_label_formlp_nome" for="mauticform_input_formlp_nome" class="mauticform-label">Nome</label>
+                                        <input type="text" name="mauticform[nome]" value="" id="mauticform_input_formlp_nome" class="mauticform-input" required>
+                                        <span class="mauticform-errormsg" style="display:none;">Digite seu nome</span>
+                                    </div>
+                                    
+                                    <div id="mauticform_formlp_whatsapp" class="mauticform-row mauticform-tel mauticform-field-3 mauticform-required" data-validate="whatsapp" data-validation-type="tel">
+                                        <label id="mauticform_label_formlp_whatsapp" for="mauticform_input_formlp_whatsapp" class="mauticform-label">Whatsapp</label>
+                                        <input type="tel" name="mauticform[whatsapp]" value="" id="mauticform_input_formlp_whatsapp" class="mauticform-input" required>
+                                        <span class="mauticform-errormsg" style="display:none;">Entraremos em contato via Whatsapp</span>
+                                    </div>
+
+                                    <div id="mauticform_formlp_estado" class="mauticform-row mauticform-select mauticform-required" data-validate="estado" data-validation-type="text">
+                                        <label id="mauticform_label_formlp_estado" for="mauticform_input_formlp_estado" class="mauticform-label">Estado</label>
+                                        <select name="mauticform[estado]" id="mauticform_input_formlp_estado" class="mauticform-selectbox" required>
+                                            <option value="">Selecione o estado</option>
+                                        </select>
+                                        <span class="mauticform-errormsg" style="display:none;">Selecione o estado</span>
+                                    </div>
+
+                                    <div id="mauticform_formlp_cidade" class="mauticform-row mauticform-select mauticform-required" data-validate="cidade" data-validation-type="text">
+                                        <label id="mauticform_label_formlp_cidade" for="mauticform_input_formlp_cidade" class="mauticform-label">Cidade</label>
+                                        <select name="mauticform[cidade]" id="mauticform_input_formlp_cidade" class="mauticform-selectbox" required>
+                                            <option value="">Selecione a cidade</option>
+                                        </select>
+                                        <span class="mauticform-errormsg" style="display:none;">Selecione a cidade</span>
+                                    </div>
+                                    
+                                    <div id="mauticform_formlp_categoria" class="mauticform-row mauticform-select mauticform-field-4 mauticform-required" data-validate="categoria" data-validation-type="text">
+                                        <label id="mauticform_label_formlp_categoria" for="mauticform_input_formlp_categoria" class="mauticform-label">Grupos de Interesse</label>
+                                        <select name="mauticform[categoria]" id="mauticform_input_formlp_categoria" class="mauticform-selectbox categoria-select" multiple required>
+                                            <option value="">Selecione um ou mais grupos</option>
+                                            <option value="Manutenção & Reparos (Conserto de eletrodomésticos, Eletricista, Encanador, Marcenaria etc)">Manutenção & Reparos (Conserto de eletrodomésticos, Eletricista, Encanador, Marcenaria etc)</option>
+                                            <option value="Instalações (Ar condicionado, Aparelhos eletrônicos e equipamentos)">Instalações (Ar condicionado, Aparelhos eletrônicos e equipamentos)</option>
+                                            <option value="Eventos & Lazer (Garçom, Churrasqueiro, Cozinheira etc)">Eventos & Lazer (Garçom, Churrasqueiro, Cozinheira etc)</option>
+                                            <option value="Construção & Reformas (Pintor, Pedreiro, Calheiro, Assentador de piso etc)">Construção & Reformas (Pintor, Pedreiro, Calheiro, Assentador de piso etc)</option>
+                                            <option value="Tecnologia & Suporte (Assistência técnica, Marketing digital etc)">Tecnologia & Suporte (Assistência técnica, Marketing digital etc)</option>
+                                            <option value="Automotivos (Lavagem, Mecânico, Funilaria, Borracheiro)">Automotivos (Lavagem, Mecânico, Funilaria, Borracheiro)</option>
+                                            <option value="Serviços Gerais Doméstico ou Empresarial (Limpeza, Jardinagem, Piscineiro, Detetização e etc)">Serviços Gerais Doméstico ou Empresarial (Limpeza, Jardinagem, Piscineiro, Detetização e etc)</option>
+                                            <option value="Beleza & Saúde (Cabeleireiro/Barbeiro, Manicure, Depilação etc)">Beleza & Saúde (Cabeleireiro/Barbeiro, Manicure, Depilação etc)</option>
+                                            <option value="Educação & Consultoria (Aulas particulares, Coach/Mentoria, Consultoria empresarial)">Educação & Consultoria (Aulas particulares, Coach/Mentoria, Consultoria empresarial)</option>
+                                            <option value="Outros">Outros (escreva)</option>
+                                        </select>
+                                        <div id="categoria_outros_wrapper" style="display:none; margin-top: 8px;">
+                                            <input type="text" id="mauticform_input_formlp_categoria_outros" class="mauticform-input" placeholder="Descreva aqui se escolheu Outros">
+                                            <span class="mauticform-errormsg" id="mauticform_errmsg_formlp_categoria_outros" style="display:none;">Descreva o que precisa em "Outros"</span>
+                                        </div>
+                                        <span class="mauticform-errormsg" style="display:none;">Selecione um grupo de interesse</span>
+                                    </div>
+                                    
+                                    <div id="mauticform_formlp_consent" class="mauticform-row mauticform-checkbox mauticform-field-6 mauticform-required" data-validate="consent" data-validation-type="checkbox">
+                                        <label class="mauticform-label" for="mauticform_input_formlp_consent">
+                                            <input type="checkbox" name="mauticform[consent]" id="mauticform_input_formlp_consent" required>
+                                            Autorizo o contato e o tratamento dos meus dados conforme a LGPD.
+                                        </label>
+                                        <span class="mauticform-errormsg" style="display:none;">É necessário aceitar para continuar</span>
+                                    </div>
+                                    
+                                    <div id="mauticform_formlp_submit" class="mauticform-row mauticform-button-wrapper mauticform-field-5">
+                                        <button class="btn btn-ghost mauticform-button" name="mauticform[submit]" value="1" id="mauticform_input_formlp_submit" type="submit">
+                                            <span class="button-text">Enviar</span>
+                                            <span class="button-loading" style="display: none;">
+                                                <svg class="spinner" viewBox="0 0 24 24">
+                                                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-dasharray="31.416" stroke-dashoffset="31.416">
+                                                        <animate attributeName="stroke-dasharray" dur="2s" values="0 31.416;15.708 15.708;0 31.416" repeatCount="indefinite"/>
+                                                        <animate attributeName="stroke-dashoffset" dur="2s" values="0;-15.708;-31.416" repeatCount="indefinite"/>
+                                                    </circle>
+                                                </svg>
+                                                Enviando...
+                                            </span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" name="mauticform[formId]" id="mauticform_formlp_id" value="2">
+                            <input type="hidden" name="mauticform[return]" id="mauticform_formlp_return" value="">
+                            <input type="hidden" name="mauticform[formName]" id="mauticform_formlp_name" value="clientesform">
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Tela de Sucesso -->
+                <div id="successContainer" style="display: none;">
+                    <div class="success-content">
+                        <div class="success-icon">
+                            <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="40" cy="40" r="38" stroke="#78CD93" stroke-width="4"/>
+                                <path d="M24 42L35 53L56 30" stroke="#78CD93" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <h3>Recebemos seus dados!</h3>
+                        <p>Obrigado. Vamos localizar o melhor profissional e falar com você.</p>
+                        <div class="success-details">
+                            <div class="detail-item"><span class="detail-icon">⏱️</span>Tempo médio de contato: 1 dia útil</div>
+                            <div class="detail-item"><span class="detail-icon">🔒</span>Seus dados estão protegidos</div>
+                        </div>
+                        <button class="success-button" id="closeSuccessButton">Fechar</button>
+                    </div>
+                </div>
+
+                <!-- Tela de Erro -->
+                <div id="errorContainer" style="display: none;">
+                    <div class="error-content">
+                        <div class="error-icon">
+                            <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="40" cy="40" r="38" stroke="#FF6B6B" stroke-width="4"/>
+                                <path d="M40 20V45" stroke="#FF6B6B" stroke-width="4" stroke-linecap="round"/>
+                                <circle cx="40" cy="58" r="3" fill="#FF6B6B"/>
+                            </svg>
+                        </div>
+                        <h3>Algo não saiu como esperado</h3>
+                        <p>Por favor, tente novamente. Se o problema persistir, fale conosco.</p>
+                        <div class="error-actions">
+                            <button class="error-button" onclick="showForm()">Tentar novamente</button>
+                            <button class="error-button" onclick="closeModalFunction()">Fechar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        if (typeof MauticSDKLoaded == 'undefined') {
+            var MauticSDKLoaded = true;
+            var head            = document.getElementsByTagName('head')[0];
+            var script          = document.createElement('script');
+            script.type         = 'text/javascript';
+            script.src          = 'https://mautic.indiqueiapp.com.br/media/js/mautic-form.js?v577542b8';
+            script.onload       = function() {
+                if (typeof MauticSDK !== 'undefined' && MauticSDK.onLoad) {
+                    MauticSDK.onLoad();
+                }
+            };
+            head.appendChild(script);
+            var MauticDomain = 'https://mautic.indiqueiapp.com.br';
+            var MauticLang   = { 'submittingMessage': 'Por favor, aguarde...' };
+        } else if (typeof MauticSDK != 'undefined') {
+            MauticSDK.onLoad();
+        }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.6/jquery.inputmask.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/js/select2.min.js"></script>
+    <script>
+        // Força cache-busting do script principal a cada carregamento
+        document.write('<script src="script.js?v=' + Date.now() + '"><\/script>');
+    </script>
+</body>
+</html>
