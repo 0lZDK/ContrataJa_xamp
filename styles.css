@@ -325,14 +325,14 @@ main {
 .services-grid {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    gap: 24px;
+    gap: 5px;
     margin-bottom: 48px;
     overflow-x: auto;
     padding-bottom: 20px;
 }
 
 .service-card {
-    width: 242px;
+    width: 200px;
     height: 291px;
     border-radius: 16px;
     overflow: hidden;
