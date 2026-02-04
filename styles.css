@@ -6,9 +6,9 @@
 
 :root {
     --primary-green: #8A2BE2; /* Roxo */
-    --primary-blue: #0840f5; /* Laranja Escuro */
+    --primary-blue: #4b6edf; /* Laranja Escuro */
     --dark-blue: #4B0082; /* Roxo Escuro */
-    --light-blue: #FFA500; /* Laranja */
+    --light-blue: #4b6edf; /* Laranja */
     --text-dark: #0A0A0A;
     --text-gray: #808185;
     --bg-light: #F5F8FF;
@@ -20,7 +20,7 @@
 /* Theme override for Cliente */
 body.theme-cliente {
     --primary-green: var(--light-blue); /* repurpose as accent for cliente */
-    --header-scrolled-bg: rgba(255, 140, 0, 0.98);
+    --header-scrolled-bg: #4b6edf(12, 80, 228, 0.98);
 }
 
 body {
