@@ -1929,8 +1929,6 @@ main {
     min-height: 0;
 }
 
-.mauticform-post-success {}
-
 .mauticform-page-wrapper {
     display: flex;
     flex-direction: column;
@@ -2021,21 +2019,13 @@ main {
     box-shadow: 0 0 0 3px rgba(120, 205, 147, 0.1);
 }
 
-.mauticform-checkboxgrp-row {}
-
 .mauticform-checkboxgrp-label { 
     font-weight: normal; 
 }
 
-.mauticform-checkboxgrp-checkbox {}
-
-.mauticform-radiogrp-row {}
-
 .mauticform-radiogrp-label { 
     font-weight: normal; 
 }
-
-.mauticform-radiogrp-radio {}
 
 .mauticform-button-wrapper .mauticform-button.btn-ghost, 
 .mauticform-pagebreak-wrapper .mauticform-pagebreak.btn-ghost { 
