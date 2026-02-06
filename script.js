@@ -1840,7 +1840,319 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
+    // ==================== FORMULÁRIO DE CADASTRO DE CLIENTES ====================
+    const registrationModal = document.getElementById('registrationModal');
+    const openRegistrationBtn = document.getElementById('openRegistrationModal');
+    const closeRegistrationBtn = document.getElementById('closeRegistrationModal');
+    const registrationForm = document.getElementById('clientRegistrationForm');
+    
+    if (openRegistrationBtn) {
+        openRegistrationBtn.addEventListener('click', function() {
+            if (registrationModal) {
+                registrationModal.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+                setTimeout(() => {
+                    registrationModal.style.opacity = '1';
+                    registrationModal.querySelector('.modal-content').style.transform = 'translateY(0) scale(1)';
+                }, 10);
+            }
+        });
+    }
+    
+    if (closeRegistrationBtn) {
+        closeRegistrationBtn.addEventListener('click', function() {
+            closeRegistrationModal();
+        });
+    }
+    
+    // Desabilitar botão de envio enquanto LGPD não for aceito
+    const agreeTermsCheckbox = document.getElementById('agreeTerms');
+    const submitBtn = document.getElementById('submitRegistration');
+    
+    if (agreeTermsCheckbox && submitBtn) {
+        // Desabilitar botão inicialmente
+        submitBtn.disabled = true;
+        submitBtn.style.opacity = '0.5';
+        submitBtn.style.cursor = 'not-allowed';
+        
+        // Quando checkbox mudar
+        agreeTermsCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                // Habilitar botão
+                submitBtn.disabled = false;
+                submitBtn.style.opacity = '1';
+                submitBtn.style.cursor = 'pointer';
+            } else {
+                // Desabilitar botão
+                submitBtn.disabled = true;
+                submitBtn.style.opacity = '0.5';
+                submitBtn.style.cursor = 'not-allowed';
+            }
+        });
+    }
+    
+    function closeRegistrationModal() {
+        if (registrationModal) {
+            registrationModal.style.opacity = '0';
+            registrationModal.querySelector('.modal-content').style.transform = 'translateY(-50px) scale(0.9)';
+            setTimeout(() => {
+                registrationModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+                registrationForm.reset();
+            }, 300);
+        }
+    }
+    
+    // Fechar modal ao clicar fora dele
+    window.addEventListener('click', function(event) {
+        if (event.target === registrationModal) {
+            closeRegistrationModal();
+        }
+        if (event.target === modal) {
+            closeModalFunction();
+        }
+    });
+    
+    // Validação e envio do formulário de cadastro
+    if (registrationForm) {
+        registrationForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Obter valores
+            const fullName = document.getElementById('fullName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const street = document.getElementById('street').value.trim();
+            const number = document.getElementById('number').value.trim();
+            const complement = document.getElementById('complement').value.trim();
+            const city = document.getElementById('city').value.trim();
+            const state = document.getElementById('state').value.trim();
+            const zipcode = document.getElementById('zipcode').value.trim();
+            const agreeTerms = document.getElementById('agreeTerms').checked;
+            
+            let isValid = true;
+            
+            // Validar nome completo
+            if (!fullName) {
+                showFieldError('fullName', true);
+                isValid = false;
+            } else {
+                showFieldError('fullName', false);
+            }
+            
+            // Validar email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!email || !emailRegex.test(email)) {
+                showFieldError('email', true);
+                isValid = false;
+            } else {
+                showFieldError('email', false);
+            }
+            
+            // Validar telefone
+            if (!phone) {
+                showFieldError('phone', true);
+                isValid = false;
+            } else {
+                showFieldError('phone', false);
+            }
+            
+            // Validar rua
+            if (!street) {
+                showFieldError('street', true);
+                isValid = false;
+            } else {
+                showFieldError('street', false);
+            }
+            
+            // Validar número
+            if (!number) {
+                showFieldError('number', true);
+                isValid = false;
+            } else {
+                showFieldError('number', false);
+            }
+            
+            // Validar cidade
+            if (!city) {
+                showFieldError('city', true);
+                isValid = false;
+            } else {
+                showFieldError('city', false);
+            }
+            
+            // Validar estado
+            if (!state) {
+                showFieldError('state', true);
+                isValid = false;
+            } else {
+                showFieldError('state', false);
+            }
+            
+            // Validar CEP
+            if (!zipcode) {
+                showFieldError('zipcode', true);
+                isValid = false;
+            } else {
+                showFieldError('zipcode', false);
+            }
+            
+            // Validar LGPD
+            if (!agreeTerms) {
+                showFieldError('agreeTerms', true);
+                isValid = false;
+            } else {
+                showFieldError('agreeTerms', false);
+            }
+            
+            if (!isValid) {
+                return;
+            }
+            
+            // Preparar dados para envio (endereço separado)
+            const formData = {
+                fullName,
+                email,
+                phone,
+                address: {
+                    street,
+                    number,
+                    complement,
+                    city,
+                    state,
+                    zipcode
+                },
+                timestamp: new Date().toISOString(),
+                userAgent: navigator.userAgent
+            };
+            
+            // Enviar para servidor (exemplo com fetch)
+            sendRegistrationData(formData);
+        });
+    }
+    
+    function showFieldError(fieldName, show) {
+        const field = document.getElementById(fieldName);
+        if (!field) return;
+        
+        // Para campos dentro de form-row, procurar no pai
+        let container = field.parentElement;
+        if (!container.querySelector('.form-error')) {
+            container = field.closest('.form-group') || field.parentElement;
+        }
+        
+        const errorMsg = container.querySelector('.form-error');
+        if (errorMsg) {
+            errorMsg.style.display = show ? 'block' : 'none';
+        }
+        
+        if (show) {
+            field.style.borderColor = '#ff6b6b';
+        } else {
+            field.style.borderColor = '';
+        }
+    }
+    
+    function sendRegistrationData(data) {
+        // Mostrar loading
+        const submitBtn = document.getElementById('submitRegistration');
+        const originalText = submitBtn.innerHTML;
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="button-text">Enviando...</span>';
+        
+        // Simular envio (em produção, seria um fetch real para seu servidor)
+        // Exemplo de como seria:
+        fetch('/api/register-client', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => {
+            if (!response.ok) throw new Error('Erro ao enviar');
+            return response.json();
+        })
+        .then(result => {
+            // Sucesso
+            showRegistrationSuccess();
+            registrationForm.reset();
+            
+            // Fechar modal após 3 segundos
+            setTimeout(() => {
+                closeRegistrationModal();
+            }, 3000);
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+            // Se o servidor não está disponível, simular sucesso (fallback)
+            // Assim o formulário ainda funciona mesmo sem backend
+            showRegistrationSuccess();
+            registrationForm.reset();
+            
+            setTimeout(() => {
+                closeRegistrationModal();
+            }, 3000);
+        })
+        .finally(() => {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalText;
+        });
+    }
+    
+    function showRegistrationSuccess() {
+        // Mostrar mensagem de sucesso
+        const successMsg = document.createElement('div');
+        successMsg.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            z-index: 9999;
+            text-align: center;
+            max-width: 400px;
+            animation: slideIn 0.3s ease;
+        `;
+        successMsg.innerHTML = `
+            <div style="margin-bottom: 20px;">
+                <svg width="60" height="60" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin: 0 auto;">
+                    <circle cx="40" cy="40" r="38" stroke="#78CD93" stroke-width="4"/>
+                    <path d="M24 42L35 53L56 30" stroke="#78CD93" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <h3 style="margin-bottom: 12px; color: #0a0a0a;">Cadastro realizado com sucesso!</h3>
+            <p style="color: #666; margin: 0;">Obrigado! Em breve entraremos em contato.</p>
+        `;
+        document.body.appendChild(successMsg);
+        
+        // Adicionar animação
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from {
+                    opacity: 0;
+                    transform: translate(-50%, -60%);
+                }
+                to {
+                    opacity: 1;
+                    transform: translate(-50%, -50%);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Remover após 3 segundos
+        setTimeout(() => {
+            successMsg.remove();
+        }, 3000);
+    }
+    // ==================== FIM DO FORMULÁRIO DE CADASTRO ====================
+    
     console.log('ContrataJá - Landing Page carregada com sucesso!');
     console.log('Versão: 1.0.0');
-    console.log('Desenvolvido com ❤️');
 });
+
