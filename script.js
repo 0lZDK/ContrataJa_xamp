@@ -1752,6 +1752,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
+    /* Partículas desativadas - função comentada para remover bolinhas
     function createParticle() {
         const particle = document.createElement('div');
         particle.style.position = 'fixed';
@@ -1788,9 +1789,8 @@ document.addEventListener('DOMContentLoaded', function() {
         requestAnimationFrame(animateParticle);
     }
     
-    if (window.innerWidth > 768) {
-        setInterval(createParticle, 3000);
-    }
+    // setInterval(createParticle, 3000);
+    */
     
     // Event listeners para botões da página de sucesso e erro
     const closeSuccessButton = document.getElementById('closeSuccess');
