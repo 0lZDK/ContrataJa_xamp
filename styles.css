@@ -17,6 +17,281 @@
     --header-scrolled-bg: rgba(138, 43, 226, 0.98); /* default matches prestador */
 }
 
+/* Dark mode variables - when JS applies .dark class */
+html.dark {
+    --bg-light: #0b0d10;
+    --text-dark: #e6eef8;
+    --text-gray: #b5bac1;
+    --primary-green: #2ea86e;
+    --primary-blue: #2f6fd6;
+    --dark-blue: #1a3a52;
+    --light-blue: #2f6fd6;
+    --bg-gradient: linear-gradient(180deg, #071021 0%, #07101a 100%);
+    --hero-gradient: linear-gradient(134deg, #2f6fd6 1%, #18324a 99%);
+    --header-scrolled-bg: rgba(20, 24, 30, 0.9);
+}
+
+/* Dark mode variables - system preference */
+@media (prefers-color-scheme: dark) {
+    :root:not(.light) {
+        --bg-light: #0b0d10;
+        --text-dark: #e6eef8;
+        --text-gray: #b5bac1;
+        --primary-green: #2ea86e;
+        --primary-blue: #2f6fd6;
+        --dark-blue: #1a3a52;
+        --light-blue: #2f6fd6;
+        --bg-gradient: linear-gradient(180deg, #071021 0%, #07101a 100%);
+        --hero-gradient: linear-gradient(134deg, #2f6fd6 1%, #18324a 99%);
+        --header-scrolled-bg: rgba(20, 24, 30, 0.9);
+    }
+}
+
+/* Explicit dark class to toggle via JS - automatically applies via CSS variables */
+html.light {
+    --bg-light: #F5F8FF;
+    --text-dark: #0A0A0A;
+    --text-gray: #808185;
+    --primary-green: #8A2BE2;
+    --primary-blue: #4b6edf;
+    --dark-blue: #4B0082;
+    --light-blue: #4b6edf;
+    --bg-gradient: linear-gradient(180deg, #F0F8FF 0%, #E6E6FA 100%);
+    --hero-gradient: linear-gradient(134deg, #8A2BE2 1%, #4B0082 99%);
+}
+
+/* Smooth theme transition */
+html.dark,
+html.dark * {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Dark mode specific element styles */
+html.dark .benefit-card {
+    background: #161b22;
+}
+
+html.dark .form-group input,
+html.dark .mauticform-input,
+html.dark .mauticform-selectbox {
+    background: #161b22;
+    border-color: #303a47;
+}
+
+html.dark .form-group input:focus,
+html.dark .mauticform-input:focus,
+html.dark .mauticform-selectbox:focus {
+    border-color: var(--primary-green);
+    box-shadow: 0 0 0 3px rgba(46, 168, 110, 0.1);
+}
+
+html.dark .modal-header {
+    background: linear-gradient(90deg, #1f4788, #1b6d3e);
+    color: white;
+}
+
+html.dark .modal-body {
+    background: #0b0d10;
+}
+
+html.dark .service-card {
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.4);
+}
+
+html.dark .btn-primary,
+html.dark .btn-secondary {
+    background: var(--primary-green);
+    color: white;
+}
+
+html.dark .nav-link {
+    color: #ffffff;
+}
+
+html.dark .section-tag {
+    background: var(--dark-blue);
+    color: white;
+}
+
+html.dark .theme-menu {
+    background: #0b0d10;
+    color: var(--text-dark);
+}
+
+html.dark .theme-menu .theme-option {
+    color: white;
+}
+
+html.dark .theme-menu .theme-option:hover {
+    background: rgba(255,255,255,0.03);
+}
+
+html.dark .toggle-password {
+    color: var(--primary-green);
+}
+
+/* Comprehensive dark mode elements */
+html.dark {
+    background: var(--bg-light);
+    color: var(--text-dark);
+}
+
+html.dark body {
+    background: var(--bg-light);
+    color: var(--text-dark);
+}
+
+html.dark main,
+html.dark section,
+html.dark article,
+html.dark aside {
+    background: var(--bg-light);
+    color: var(--text-dark);
+}
+
+html.dark .header {
+    background: var(--primary-green);
+}
+
+html.dark .nav-link,
+html.dark .nav-link:hover {
+    color: white;
+}
+
+html.dark .section-title,
+html.dark .section-header h2,
+html.dark .hero-title {
+    color: var(--text-dark);
+}
+
+html.dark .section-tag {
+    background: var(--dark-blue);
+    color: white;
+}
+
+html.dark .services,
+html.dark .benefits,
+html.dark .hero,
+html.dark .guarantee {
+    background: var(--bg-gradient);
+}
+
+html.dark .benefit-card {
+    background: #161b22;
+    color: var(--text-dark);
+}
+
+html.dark .modal-body,
+html.dark .registration-cta {
+    background: var(--bg-light);
+    color: var(--text-dark);
+}
+
+html.dark .footer {
+    background: var(--bg-gradient);
+}
+
+html.dark .footer-text,
+html.dark .footer-text p {
+    color: var(--text-dark);
+}
+
+html.dark .form-group label,
+html.dark .form-group input,
+html.dark .mauticform-label,
+html.dark .mauticform-input,
+html.dark .mauticform-selectbox,
+html.dark .mauticform-textarea {
+    color: var(--text-dark);
+}
+
+html.dark .form-group input,
+html.dark .mauticform-input,
+html.dark .mauticform-selectbox,
+html.dark .mauticform-textarea {
+    background: #161b22;
+    border-color: #303a47;
+}
+
+html.dark .form-group input:focus,
+html.dark .mauticform-input:focus,
+html.dark .mauticform-selectbox:focus,
+html.dark .mauticform-textarea:focus {
+    border-color: var(--primary-green);
+    background: #161b22;
+}
+
+/* Header auth buttons */
+.header-auth .btn-login,
+.header-auth .btn-signin {
+    padding: 10px 16px;
+    font-size: 14px;
+}
+
+/* Dark mode toggle fixed */
+.dark-mode-toggle {
+    position: fixed;
+    right: 18px;
+    bottom: 18px;
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: rgba(0,0,0,0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 20000;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(2,6,23,0.5);
+    transition: transform 0.12s ease, background 0.12s ease;
+}
+.dark-mode-toggle:hover { transform: translateY(-2px); }
+.dark .dark-mode-toggle { background: rgba(255,255,255,0.06); }
+.dark-mode-toggle svg { filter: none; }
+
+/* Theme menu popup */
+.theme-menu {
+    position: absolute;
+    right: 0;
+    bottom: 56px;
+    background: white;
+    color: #0a0a0a;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    overflow: hidden;
+    display: none;
+    min-width: 140px;
+    z-index: 21000;
+}
+.dark .theme-menu { background: #0b0d10; color: var(--text-dark); }
+.theme-menu .theme-option {
+    display: block;
+    width: 100%;
+    padding: 10px 12px;
+    border: none;
+    background: transparent;
+    text-align: left;
+    cursor: pointer;
+    font-weight: 600;
+}
+.theme-menu .theme-option:hover { background: rgba(0,0,0,0.04); }
+.dark .theme-menu .theme-option:hover { background: rgba(255,255,255,0.03); }
+
+/* Login modal nicer styles */
+.login-modal .modal-header { background: linear-gradient(90deg, var(--primary-blue), var(--primary-green)); color: white; }
+.login-modal .modal-subtitle { font-size: 14px; opacity: 0.95; margin-top: 6px; }
+.login-intro { display:flex; gap:12px; align-items:center; padding:12px 0; }
+.login-intro .small { margin:0; color: var(--text-gray); }
+.login-modal .modal-body { padding-top: 6px; }
+.password-wrapper .password-field { position: relative; display: flex; align-items: center; border: 2px solid #e1e5e9; border-radius: 8px; background: #fff; overflow: hidden; }
+.password-field input { flex: 1; padding: 12px 16px; border: none; font-size: 16px; font-family: 'Red Hat Display', sans-serif; background: transparent; color: #0a0a0a; outline: none; }
+.password-field input:focus { outline: none; border: none; box-shadow: none; }
+.toggle-password { background: transparent; border: none; color: var(--primary-blue); padding: 12px 8px; cursor: pointer; font-weight: 600; flex-shrink: 0; font-size: 13px; }
+.toggle-password:active { transform: scale(0.98); }
+.dark .password-wrapper .password-field { border-color: #303a47; background: #161b22; }
+.dark .password-field input { color: var(--text-dark); }
+.dark .toggle-password { color: var(--primary-green); }
+
 /* Theme override for Cliente */
 body.theme-cliente {
     --primary-green: var(--light-blue); /* repurpose as accent for cliente */
@@ -28,6 +303,7 @@ body {
     line-height: 1.6;
     color: var(--text-dark);
     background: var(--bg-light);
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .header {

@@ -11,6 +11,25 @@
     <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/css/select2.min.css" rel="stylesheet" />
+    <script>
+        // Apply theme immediately on load (before render)
+        (function() {
+            const THEME_KEY = 'cj_theme';
+            const saved = localStorage.getItem(THEME_KEY) || 'system';
+            const html = document.documentElement;
+            
+            if (saved === 'dark') {
+                html.classList.add('dark');
+            } else if (saved === 'light') {
+                html.classList.add('light');
+            } else {
+                // system
+                const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+                if (prefersDark) html.classList.add('dark');
+                else html.classList.add('light');
+            }
+        })();
+    </script>
 </head>
 <body class="theme-cliente" data-role="cliente">
     <header class="header">
@@ -23,10 +42,11 @@
                     <a href="#servicos" class="nav-link">Principais serviços</a>
                     <a href="#sobre" class="nav-link">O que é?</a>
                     <a href="#como-funciona" class="nav-link">Como Funciona?</a>
+                    <a href="index.html" class="nav-link">Para Prestadores</a>
                 </div>
-                <div class="navbar-buttons">
-                    <a href="cliente.html" class="btn-primary">Para Clientes</a>
-                    <a href="index.html" class="btn-secondary">Para Prestadores</a>
+                <div class="navbar-buttons header-auth">
+                    <button class="btn-signin btn-secondary" id="openSigninBtn">Sign in</button>
+                    <button class="btn-login btn-secondary" id="openLoginBtn">Login</button>
                 </div>
             </div>
         </nav>
@@ -338,6 +358,55 @@
                     <button type="submit" class="btn btn-primary" id="submitRegistration">Realizar Cadastro</button>
                 </form>
             </div>
+        </div>
+    </div>
+
+    <!-- Modal de Login -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content login-modal">
+            <div class="modal-header">
+                <div>
+                    <h2 id="loginModalTitle">Entrar</h2>
+                    <p class="modal-subtitle">Acesse sua conta usando usuário ou email</p>
+                </div>
+                <button class="modal-close" id="closeLoginModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="login-intro">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" stroke="#fff" stroke-width="0" fill="#4b6edf" />
+                    </svg>
+                    <p class="small">Bem-vindo de volta! Informe suas credenciais para continuar.</p>
+                </div>
+                <form id="loginForm" class="registration-form" autocomplete="on">
+                    <div class="form-group">
+                        <label for="loginIdentifier">Usuário ou Email *</label>
+                        <input type="text" id="loginIdentifier" name="loginIdentifier" placeholder="Usuário ou email" required>
+                        <span class="form-error" style="display:none;">Informe usuário ou email</span>
+                    </div>
+                    <div class="form-group password-wrapper">
+                        <label for="loginPassword">Senha *</label>
+                        <div class="password-field">
+                            <input type="password" id="loginPassword" name="loginPassword" placeholder="Senha" required>
+                            <button type="button" id="togglePasswordBtn" class="toggle-password" aria-label="Mostrar senha">Mostrar</button>
+                        </div>
+                        <span class="form-error" style="display:none;">Informe a senha</span>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="submitLogin">Entrar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dark mode toggle (fixed bottom-right) -->
+    <div id="darkModeToggle" class="dark-mode-toggle" title="Alternar modo escuro">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke="#fff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div id="themeMenu" class="theme-menu" aria-hidden="true">
+            <button class="theme-option" data-theme="dark">Escuro</button>
+            <button class="theme-option" data-theme="light">Claro</button>
+            <button class="theme-option" data-theme="system">Automático</button>
         </div>
     </div>
 

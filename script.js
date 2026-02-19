@@ -55,8 +55,15 @@ document.addEventListener('DOMContentLoaded', function() {
     
     navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
-            e.preventDefault();
             const targetId = this.getAttribute('href');
+            
+            // Se for link externo (não começa com #), permite navegação padrão
+            if (!targetId.startsWith('#')) {
+                return;
+            }
+            
+            // Para links internos (com #), faz scroll smooth
+            e.preventDefault();
             const targetSection = document.querySelector(targetId);
             
             if (targetSection) {
@@ -1911,6 +1918,16 @@ document.addEventListener('DOMContentLoaded', function() {
         if (event.target === modal) {
             closeModalFunction();
         }
+        const loginModalEl = document.getElementById('loginModal');
+        if (loginModalEl && event.target === loginModalEl) {
+            // fechar login modal
+            if (typeof closeLoginModal === 'function') closeLoginModal();
+            else {
+                loginModalEl.style.opacity = '0';
+                loginModalEl.querySelector('.modal-content').style.transform = 'translateY(-50px) scale(0.9)';
+                setTimeout(() => { loginModalEl.style.display = 'none'; document.body.style.overflow = 'auto'; }, 300);
+            }
+        }
     });
     
     // Validação e envio do formulário de cadastro
@@ -2154,5 +2171,161 @@ document.addEventListener('DOMContentLoaded', function() {
     
     console.log('ContrataJá - Landing Page carregada com sucesso!');
     console.log('Versão: 1.0.0');
+
+    // ----------------- LOGIN / SIGNIN e MODO ESCURO -----------------
+    const openLoginBtn = document.getElementById('openLoginBtn');
+    const openSigninBtn = document.getElementById('openSigninBtn');
+    const loginModal = document.getElementById('loginModal');
+    const closeLoginModalBtn = document.getElementById('closeLoginModal');
+    const loginFormEl = document.getElementById('loginForm');
+    const darkToggle = document.getElementById('darkModeToggle');
+
+    function openLoginModal() {
+        if (!loginModal) return;
+        loginModal.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+        setTimeout(() => {
+            loginModal.style.opacity = '1';
+            loginModal.querySelector('.modal-content').style.transform = 'translateY(0) scale(1)';
+        }, 10);
+    }
+
+    function closeLoginModal() {
+        if (!loginModal) return;
+        loginModal.style.opacity = '0';
+        loginModal.querySelector('.modal-content').style.transform = 'translateY(-50px) scale(0.9)';
+        setTimeout(() => {
+            loginModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+            if (loginFormEl) loginFormEl.reset();
+        }, 300);
+    }
+
+    if (openLoginBtn) openLoginBtn.addEventListener('click', openLoginModal);
+    if (closeLoginModalBtn) closeLoginModalBtn.addEventListener('click', closeLoginModal);
+
+    // Signin button opens registration modal (reuses existing)
+    if (openSigninBtn && registrationModal) {
+        openSigninBtn.addEventListener('click', function() {
+            registrationModal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+            setTimeout(() => {
+                registrationModal.style.opacity = '1';
+                registrationModal.querySelector('.modal-content').style.transform = 'translateY(0) scale(1)';
+            }, 10);
+        });
+    }
+
+    if (loginFormEl) {
+        loginFormEl.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const identifier = document.getElementById('loginIdentifier').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            if (!identifier || !password) {
+                if (!identifier) showFieldError('loginIdentifier', true);
+                if (!password) showFieldError('loginPassword', true);
+                return;
+            }
+
+            // Simular login - substituir por chamada real à API quando disponível
+            fetch('/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ identifier, password })
+            }).then(res => {
+                if (!res.ok) throw new Error('Não autorizado');
+                return res.json();
+            }).then(data => {
+                // Expect token / user
+                // Salvar em localStorage se Remember Me
+                const remember = document.getElementById('rememberMe').checked;
+                if (remember && data.token) localStorage.setItem('authToken', data.token);
+                closeLoginModal();
+                alert('Login realizado com sucesso (simulado).');
+            }).catch(err => {
+                // Fallback simulado: aceitar qualquer credencial em ambiente sem backend
+                console.warn('Login falhou ou endpoint indisponível, simulando sucesso. Erro:', err);
+                closeLoginModal();
+                alert('Login simulado: acesso concedido.');
+            });
+        });
+    }
+
+    // Dark mode: respeitar preferência do sistema e persistir escolha do usuário
+    const THEME_KEY = 'cj_theme';
+    function applyTheme(theme) {
+        // theme: 'dark' | 'light' | 'system'
+        const html = document.documentElement;
+        
+        // Remove todas as classes anteriores
+        html.classList.remove('dark', 'light');
+        
+        if (theme === 'dark') {
+            html.classList.add('dark');
+        } else if (theme === 'light') {
+            html.classList.add('light');
+        } else {
+            // system: respeita preferência do SO
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (prefersDark) {
+                html.classList.add('dark');
+            } else {
+                html.classList.add('light');
+            }
+        }
+    }
+
+    // Inicializar tema
+    const saved = localStorage.getItem(THEME_KEY) || 'system';
+    applyTheme(saved);
+
+    // Observar mudanças de preferência do sistema
+    if (window.matchMedia) {
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+            const current = localStorage.getItem(THEME_KEY) || 'system';
+            if (current === 'system') applyTheme('system');
+        });
+    }
+
+    // Theme menu interaction: open popup and select explicit theme
+    const themeMenu = document.getElementById('themeMenu');
+    function closeThemeMenu() { if (themeMenu) themeMenu.style.display = 'none'; themeMenu && themeMenu.setAttribute('aria-hidden','true'); }
+    function openThemeMenu() { if (themeMenu) { themeMenu.style.display = 'block'; themeMenu.setAttribute('aria-hidden','false'); } }
+
+    if (darkToggle) {
+        darkToggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (!themeMenu) return;
+            if (themeMenu.style.display === 'block') closeThemeMenu(); else openThemeMenu();
+        });
+    }
+
+    // Close theme menu on outside click
+    document.addEventListener('click', function(e) {
+        if (!themeMenu) return;
+        if (!darkToggle.contains(e.target) && !themeMenu.contains(e.target)) closeThemeMenu();
+    });
+
+    if (themeMenu) {
+        const opts = themeMenu.querySelectorAll('.theme-option');
+        opts.forEach(btn => btn.addEventListener('click', function() {
+            const theme = this.getAttribute('data-theme');
+            localStorage.setItem(THEME_KEY, theme);
+            applyTheme(theme);
+            closeThemeMenu();
+        }));
+    }
+
+    // Toggle password visibility
+    const togglePasswordBtn = document.getElementById('togglePasswordBtn');
+    const loginPasswordField = document.getElementById('loginPassword');
+    if (togglePasswordBtn && loginPasswordField) {
+        togglePasswordBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const isPassword = loginPasswordField.getAttribute('type') === 'password';
+            loginPasswordField.setAttribute('type', isPassword ? 'text' : 'password');
+            this.textContent = isPassword ? 'Ocultar' : 'Mostrar';
+        });
+    }
 });
 
