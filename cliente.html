@@ -307,6 +307,30 @@
                     </div>
 
                     <div class="form-group">
+                        <label for="username">Usuário *</label>
+                        <input type="text" id="username" name="username" placeholder="Escolha um nome de usuário" required>
+                        <span class="form-error" style="display:none;">Por favor, digite um nome de usuário</span>
+                    </div>
+
+                    <div class="form-group password-wrapper">
+                        <label for="password">Senha *</label>
+                        <div class="password-field">
+                            <input type="password" id="password" name="password" placeholder="Digite uma senha forte" required>
+                            <button type="button" class="toggle-password" aria-label="Mostrar senha" onclick="togglePasswordVisibility('password')">Mostrar</button>
+                        </div>
+                        <span class="form-error" style="display:none;">Por favor, digite uma senha</span>
+                    </div>
+
+                    <div class="form-group password-wrapper">
+                        <label for="confirmPassword">Confirme a Senha *</label>
+                        <div class="password-field">
+                            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirme sua senha" required>
+                            <button type="button" class="toggle-password" aria-label="Mostrar senha" onclick="togglePasswordVisibility('confirmPassword')">Mostrar</button>
+                        </div>
+                        <span class="form-error" style="display:none;">As senhas não coincidem</span>
+                    </div>
+
+                    <div class="form-group">
                         <label for="phone">Telefone *</label>
                         <input type="tel" id="phone" name="phone" placeholder="(11) 98765-4321" required>
                         <span class="form-error" style="display:none;">Por favor, digite um telefone válido</span>

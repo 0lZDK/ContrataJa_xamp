@@ -1938,6 +1938,9 @@ document.addEventListener('DOMContentLoaded', function() {
             // Obter valores
             const fullName = document.getElementById('fullName').value.trim();
             const email = document.getElementById('email').value.trim();
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
             const phone = document.getElementById('phone').value.trim();
             const street = document.getElementById('street').value.trim();
             const number = document.getElementById('number').value.trim();
@@ -1964,6 +1967,30 @@ document.addEventListener('DOMContentLoaded', function() {
                 isValid = false;
             } else {
                 showFieldError('email', false);
+            }
+
+            // Validar nome de usuário
+            if (!username || username.length < 3) {
+                showFieldError('username', true);
+                isValid = false;
+            } else {
+                showFieldError('username', false);
+            }
+
+            // Validar senha
+            if (!password || password.length < 6) {
+                showFieldError('password', true);
+                isValid = false;
+            } else {
+                showFieldError('password', false);
+            }
+
+            // Validar confirmação de senha
+            if (password !== confirmPassword) {
+                showFieldError('confirmPassword', true);
+                isValid = false;
+            } else {
+                showFieldError('confirmPassword', false);
             }
             
             // Validar telefone
@@ -2030,6 +2057,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const formData = {
                 fullName,
                 email,
+                username,
+                password,
                 phone,
                 address: {
                     street,
@@ -2077,39 +2106,37 @@ document.addEventListener('DOMContentLoaded', function() {
         submitBtn.disabled = true;
         submitBtn.innerHTML = '<span class="button-text">Enviando...</span>';
         
-        // Simular envio (em produção, seria um fetch real para seu servidor)
-        // Exemplo de como seria:
-        fetch('/api/register-client', {
+        // Enviar para backend PHP real
+        const pageRole = document.body.dataset.role || 'cliente';
+        const endpoint = pageRole === 'prestador' ? 'cadastro_prestador.php' : 'cadastro_cliente.php';
+
+        fetch(endpoint, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data)
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                nome: data.fullName,
+                email: data.email,
+                usuario: data.username,
+                senha: data.password,
+                cidade: data.address ? data.address.city : '',
+                estado: data.address ? data.address.state : '',
+                telefone: data.phone,
+                grupodeinteresse: ''
+            })
         })
-        .then(response => {
-            if (!response.ok) throw new Error('Erro ao enviar');
-            return response.json();
-        })
+        .then(response => response.json())
         .then(result => {
-            // Sucesso
-            showRegistrationSuccess();
-            registrationForm.reset();
-            
-            // Fechar modal após 3 segundos
-            setTimeout(() => {
-                closeRegistrationModal();
-            }, 3000);
+            if (result.success) {
+                showRegistrationSuccess();
+                registrationForm.reset();
+                setTimeout(() => { closeRegistrationModal(); }, 3000);
+            } else {
+                alert(result.message || 'Erro ao cadastrar. Tente novamente.');
+            }
         })
         .catch(error => {
             console.error('Erro:', error);
-            // Se o servidor não está disponível, simular sucesso (fallback)
-            // Assim o formulário ainda funciona mesmo sem backend
-            showRegistrationSuccess();
-            registrationForm.reset();
-            
-            setTimeout(() => {
-                closeRegistrationModal();
-            }, 3000);
+            alert('Erro de conexão. Verifique se o XAMPP está rodando.');
         })
         .finally(() => {
             submitBtn.disabled = false;
@@ -2227,26 +2254,61 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
 
-            // Simular login - substituir por chamada real à API quando disponível
-            fetch('/api/login', {
+            // Chamar backend PHP real
+            const tipo = document.body.dataset.role === 'prestador' ? 'prestador' : 'cliente';
+            const submitLoginBtn = loginFormEl.querySelector('button[type="submit"]');
+            if (submitLoginBtn) { submitLoginBtn.disabled = true; submitLoginBtn.textContent = 'Entrando...'; }
+
+            fetch('login.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ identifier, password })
-            }).then(res => {
-                if (!res.ok) throw new Error('Não autorizado');
-                return res.json();
-            }).then(data => {
-                // Expect token / user
-                // Salvar em localStorage se Remember Me
-                const remember = document.getElementById('rememberMe').checked;
-                if (remember && data.token) localStorage.setItem('authToken', data.token);
-                closeLoginModal();
-                alert('Login realizado com sucesso (simulado).');
+                body: JSON.stringify({ identificador: identifier, senha: password, tipo })
+            }).then(res => res.json()).then(data => {
+                if (data.success) {
+                    closeLoginModal();
+                    // Atualizar navbar com nome do usuário
+                    const btnLoginNav  = document.getElementById('openLoginBtn');
+                    const btnSigninNav = document.getElementById('openSigninBtn');
+                    if (btnLoginNav)  btnLoginNav.style.display  = 'none';
+                    if (btnSigninNav) btnSigninNav.style.display = 'none';
+                    if (!document.getElementById('usuarioLogadoBtn')) {
+                        const navButtons = document.querySelector('.navbar-buttons');
+                        if (navButtons) {
+                            const btnU = document.createElement('button');
+                            btnU.id = 'usuarioLogadoBtn';
+                            btnU.className = 'btn-secondary';
+                            btnU.innerHTML = '👤 ' + data.usuario.nome;
+                            btnU.style.cursor = 'default';
+                            const btnSair = document.createElement('button');
+                            btnSair.className = 'btn-secondary';
+                            btnSair.textContent = 'Sair';
+                            btnSair.addEventListener('click', () => fetch('logout.php').then(() => location.reload()));
+                            navButtons.appendChild(btnU);
+                            navButtons.appendChild(btnSair);
+                        }
+                    }
+                } else {
+                    let erroEl = document.getElementById('loginErroGeral');
+                    if (!erroEl) {
+                        erroEl = document.createElement('p');
+                        erroEl.id = 'loginErroGeral';
+                        erroEl.style.cssText = 'color:#e74c3c;margin-bottom:8px;font-size:0.9rem;';
+                        loginFormEl.prepend(erroEl);
+                    }
+                    erroEl.textContent = data.message || 'Usuário ou senha incorretos.';
+                }
             }).catch(err => {
-                // Fallback simulado: aceitar qualquer credencial em ambiente sem backend
-                console.warn('Login falhou ou endpoint indisponível, simulando sucesso. Erro:', err);
-                closeLoginModal();
-                alert('Login simulado: acesso concedido.');
+                console.error('Erro login:', err);
+                let erroEl = document.getElementById('loginErroGeral');
+                if (!erroEl) {
+                    erroEl = document.createElement('p');
+                    erroEl.id = 'loginErroGeral';
+                    erroEl.style.cssText = 'color:#e74c3c;margin-bottom:8px;font-size:0.9rem;';
+                    loginFormEl.prepend(erroEl);
+                }
+                erroEl.textContent = 'Erro de conexão. Verifique se o XAMPP está rodando.';
+            }).finally(() => {
+                if (submitLoginBtn) { submitLoginBtn.disabled = false; submitLoginBtn.textContent = 'Entrar'; }
             });
         });
     }
@@ -2329,3 +2391,17 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+// Função global para alternar visibilidade de senha (usado no formulário de sign in)
+function togglePasswordVisibility(fieldId) {
+    const field = document.getElementById(fieldId);
+    if (!field) return;
+    
+    const isPassword = field.getAttribute('type') === 'password';
+    field.setAttribute('type', isPassword ? 'text' : 'password');
+    
+    // Atualizar o texto do botão
+    const button = field.parentElement.querySelector('.toggle-password');
+    if (button) {
+        button.textContent = isPassword ? 'Ocultar' : 'Mostrar';
+    }
+}
