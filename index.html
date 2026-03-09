@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -355,7 +354,7 @@
                         </div>
                     </div>
                 <div id="mauticform_wrapper_formlp" class="mauticform_wrapper">
-                    <form autocomplete="off" accept-charset="UTF-8" role="form" method="post" action="https://mautic.indiqueiapp.com.br/form/submit?formId=1" id="mauticform_formlp" data-mautic-form="formlp" data-mautic-estado-alias="estado1" data-mautic-cidade-alias="cidade1" data-mautic-categoria-alias="categoria" form-lp>
+                    <form autocomplete="off" accept-charset="UTF-8" role="form" method="post" id="mauticform_formlp">
                         <div class="mauticform-error" id="mauticform_formlp_error" style="display: none;"></div>
                         <div class="mauticform-message" id="mauticform_formlp_message" style="display: none;"></div>
                         <div class="mauticform-innerform">
@@ -367,6 +366,21 @@
                                         <label id="mauticform_label_formlp_nome" for="mauticform_input_formlp_nome" class="mauticform-label">Nome</label>
                                         <input type="text" name="mauticform[nome]" value="" id="mauticform_input_formlp_nome" class="mauticform-input" required>
                                         <span class="mauticform-errormsg" style="display:none;">Digite seu nome</span>
+                                    </div>
+                                    
+                                    <div id="mauticform_formlp_email" class="mauticform-row mauticform-email mauticform-required" data-validate="email" data-validation-type="email">
+                                        <label id="mauticform_label_formlp_email" for="mauticform_input_formlp_email" class="mauticform-label">Email</label>
+                                        <input type="email" name="mauticform[email]" value="" id="mauticform_input_formlp_email" class="mauticform-input" required>
+                                        <span class="mauticform-errormsg" style="display:none;">Informe um email válido</span>
+                                    </div>
+                                    
+                                    <div id="mauticform_formlp_senha" class="mauticform-row mauticform-password mauticform-required" data-validate="senha" data-validation-type="password">
+                                        <label id="mauticform_label_formlp_senha" for="mauticform_input_formlp_senha" class="mauticform-label">Senha</label>
+                                        <div style="position: relative;">
+                                            <input type="password" name="mauticform[senha]" value="" id="mauticform_input_formlp_senha" class="mauticform-input" required style="padding-right: 40px;">
+                                            <button type="button" class="toggle-password" onclick="togglePasswordVisibility('mauticform_input_formlp_senha')" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 0.85rem; color: #666;">Mostrar</button>
+                                        </div>
+                                        <span class="mauticform-errormsg" style="display:none;">Senha deve ter no mínimo 6 caracteres</span>
                                     </div>
                                     
                                     <div id="mauticform_formlp_whatsapp" class="mauticform-row mauticform-tel mauticform-field-3 mauticform-required" data-validate="whatsapp" data-validation-type="tel">
@@ -459,9 +473,9 @@
                                     </div>
                                 </div>
                             </div>
-                            <input type="hidden" name="mauticform[formId]" id="mauticform_formlp_id" value="1">
-                            <input type="hidden" name="mauticform[return]" id="mauticform_formlp_return" value="">
-                            <input type="hidden" name="mauticform[formName]" id="mauticform_formlp_name" value="prestadorform">
+                            
+                            
+                            
                         </form>
                     </div>
                 </div>
@@ -516,25 +530,7 @@
         </div>
     </div>
 
-    <script type="text/javascript">
-        if (typeof MauticSDKLoaded == 'undefined') {
-            var MauticSDKLoaded = true;
-            var head            = document.getElementsByTagName('head')[0];
-            var script          = document.createElement('script');
-            script.type         = 'text/javascript';
-            script.src          = 'https://mautic.indiqueiapp.com.br/media/js/mautic-form.js?v577542b8';
-            script.onload       = function() {
-                MauticSDK.onLoad();
-            };
-            head.appendChild(script);
-            var MauticDomain = 'https://mautic.indiqueiapp.com.br';
-            var MauticLang   = {
-                'submittingMessage': "Por favor, aguarde..."
-            }
-        }else if (typeof MauticSDK != 'undefined') {
-            MauticSDK.onLoad();
-        }
-    </script>
+    
 
     <!-- Modal de Login -->
     <div id="loginModal" class="modal">
@@ -585,31 +581,51 @@
         </div>
     </div>
 
-    <script type="text/javascript">
-        if (typeof MauticSDKLoaded == 'undefined') {
-            var MauticSDKLoaded = true;
-            var head            = document.getElementsByTagName('head')[0];
-            var script          = document.createElement('script');
-            script.type         = 'text/javascript';
-            script.src          = 'https://mautic.indiqueiapp.com.br/media/js/mautic-form.js?v577542b8';
-            script.onload       = function() {
-                MauticSDK.onLoad();
-            };
-            head.appendChild(script);
-            var MauticDomain = 'https://mautic.indiqueiapp.com.br';
-            var MauticLang   = {
-                'submittingMessage': "Por favor, aguarde..."
-            }
-        }else if (typeof MauticSDK != 'undefined') {
-            MauticSDK.onLoad();
-        }
-    </script>
+    
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.8/jquery.inputmask.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/js/select2.min.js"></script>
-    <script>
-        // Força cache-busting do script principal a cada carregamento
-        document.write('<script src="script.js?v=' + Date.now() + '"><\/script>');
-    </script>
+    
+    <!-- Modal de Login para Prestadores -->
+    <div id="prestadorLoginModal" class="modal">
+        <div class="modal-content login-modal">
+            <div class="modal-header">
+                <div>
+                    <h2>Login Prestador</h2>
+                    <p class="modal-subtitle">Acesse sua conta para editar dados</p>
+                </div>
+                <button class="modal-close" id="closePrestadorLoginModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="login-intro">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" stroke="#fff" stroke-width="0" fill="#4b6edf" />
+                    </svg>
+                    <p class="small">Informe seu email e senha para continuar.</p>
+                </div>
+                <form id="prestadorLoginForm" class="registration-form" autocomplete="on">
+                    <div class="form-group">
+                        <label for="prestadorEmail">Email *</label>
+                        <input type="email" id="prestadorEmail" name="prestadorEmail" placeholder="seu@email.com" required>
+                        <span class="form-error" style="display:none;">Informe um email válido</span>
+                    </div>
+                    <div class="form-group password-wrapper">
+                        <label for="prestadorSenha">Senha *</label>
+                        <div class="password-field">
+                            <input type="password" id="prestadorSenha" name="prestadorSenha" placeholder="Sua senha" required>
+                            <button type="button" class="toggle-password" onclick="togglePasswordVisibility('prestadorSenha')" aria-label="Mostrar senha">Mostrar</button>
+                        </div>
+                        <span class="form-error" style="display:none;">Informe a senha</span>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="submitPrestadorLogin">Entrar</button>
+                    <p class="form-note" style="text-align: center; margin-top: 12px; font-size: 0.9rem;">
+                        Não tem senha? <a href="#" onclick="openPrestadorRegistro(event)" style="color: #4b6edf; text-decoration: none;">Cadastre-se aqui</a>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
 </body>
 </html>

@@ -30,6 +30,9 @@ if (empty($nome) || empty($email) || empty($usuario) || empty($senha)) {
     exit;
 }
 
+// Limpar telefone: remover formatação, guardar como string
+$telefone = preg_replace('/\D/', '', $telefone); // só dígitos
+
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     echo json_encode(["success" => false, "message" => "E-mail inválido."]);
     exit;

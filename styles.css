@@ -2133,6 +2133,8 @@ main {
     background-color: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(5px);
     animation: fadeIn 0.3s ease;
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
 .modal-content {
@@ -2148,6 +2150,8 @@ main {
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    transform: translateY(-50px) scale(0.9);
+    transition: transform 0.3s ease;
 }
 
 .modal-header {

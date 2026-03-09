@@ -228,20 +228,19 @@ document.addEventListener('DOMContentLoaded', function() {
         initializePhoneInput();
         initializeCategoriaSelect();
         
-        // Inicializar campos de localização após garantir que o DOM está pronto
-        console.log('Agendando inicialização de campos de localização com 50ms de delay');
+        // Inicializar campos de localização com delay maior
+        console.log('Agendando inicialização de campos de localização com 100ms de delay');
         setTimeout(() => {
-            console.log('Executando initializeLocationFields() após 50ms de delay');
+            console.log('Executando initializeLocationFields()');
             initializeLocationFields().catch(err => {
                 console.error('Erro ao inicializar campos de localização:', err);
-                console.log('Tentando novamente após 500ms de delay');
-                // Fallback: tentar novamente
+                console.log('Tentando novamente após 1000ms de delay');
                 setTimeout(() => {
-                    console.log('Executando retry de initializeLocationFields() após 500ms');
+                    console.log('Executando retry de initializeLocationFields()');
                     initializeLocationFields();
-                }, 500);
+                }, 1000);
             });
-        }, 50);
+        }, 100);
     }
     
     function openModalWithSearchMessage(searchValue) {
@@ -616,139 +615,171 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    let estadoChangeHandler = null;
+
     async function initializeLocationFields() {
         const estadoEl = document.getElementById('mauticform_input_formlp_estado');
         const cidadeEl = document.getElementById('mauticform_input_formlp_cidade');
         
-        console.log('initializeLocationFields() chamada');
-        console.log('estadoEl encontrado:', !!estadoEl);
-        console.log('cidadeEl encontrado:', !!cidadeEl);
+        console.log('=== INITIALIZE LOCATION FIELDS ===');
+        console.log('estadoEl:', !!estadoEl);
+        console.log('cidadeEl:', !!cidadeEl);
         
         if (!estadoEl || !cidadeEl) {
-            console.error('Elementos de estado ou cidade não encontrados!');
+            console.error('❌ Elementos não encontrados!');
             return;
         }
 
         // Popular estados
+        console.log('Buscando estados...');
         const estados = await fetchEstados();
-        console.log('Estados carregados:', estados.length);
+        console.log('✓ Estados carregados:', estados.length);
         
-        const optionsHtml = (estados && estados.length)
-            ? ('<option value="">Selecione o estado</option>' + estados.map(e => {
+        // Montar HTML dos estados
+        let estadosHtml = '<option value="">Selecione o estado</option>';
+        if (estados && estados.length > 0) {
+            estados.forEach(e => {
                 const val = removeAccents(e.nome);
-                return `<option value="${val}" data-uf="${e.sigla}" data-id="${e.id || ''}">${e.sigla} - ${e.nome}</option>`;
-            }).join(''))
-            : '<option value="Sao Paulo" data-uf="SP">SP - São Paulo</option>';
-
-        // Se Select2 estiver ativo, destruir antes de trocar options
-        let hadSelect2 = false;
-        if (typeof $ !== 'undefined' && typeof $.fn.select2 === 'function') {
-            const $estado = $(estadoEl);
-            const $cidade = $(cidadeEl);
-            if ($estado.data('select2')) { 
-                $estado.select2('destroy'); 
-                hadSelect2 = true; 
-            }
-            if ($cidade.data('select2')) { 
-                $cidade.select2('destroy'); 
-            }
+                estadosHtml += `<option value="${val}" data-uf="${e.sigla}">${e.sigla} - ${e.nome}</option>`;
+            });
+        } else {
+            console.log('⚠ Usando estados fallback');
+            estadosHtml += `<option value="Sao Paulo" data-uf="SP">SP - São Paulo</option>
+                <option value="Minas Gerais" data-uf="MG">MG - Minas Gerais</option>
+                <option value="Rio de Janeiro" data-uf="RJ">RJ - Rio de Janeiro</option>
+                <option value="Bahia" data-uf="BA">BA - Bahia</option>
+                <option value="Paraná" data-uf="PR">PR - Paraná</option>
+                <option value="Santa Catarina" data-uf="SC">SC - Santa Catarina</option>
+                <option value="Rio Grande do Sul" data-uf="RS">RS - Rio Grande do Sul</option>`;
         }
 
-        estadoEl.innerHTML = optionsHtml;
-        cidadeEl.innerHTML = '<option value="">Selecione a cidade</option>';
-        
-        console.log('HTML dos options inserido');
+        // Atualizar select de estado
+        estadoEl.innerHTML = estadosHtml;
+        console.log('✓ Estados inseridos:', estadoEl.options.length, 'opções');
 
-        // Reaplicar Select2
-        if (typeof $ !== 'undefined' && typeof $.fn.select2 === 'function') {
-            const $estado = $(estadoEl);
-            const $cidade = $(cidadeEl);
-            $estado.select2({ placeholder: 'Selecione o estado', allowClear: true, width: '100%', dropdownParent: $('#mauticModal') });
-            $cidade.select2({ placeholder: 'Selecione a cidade', allowClear: true, width: '100%', dropdownParent: $('#mauticModal') });
-            console.log('Select2 reaplicado');
+        // Selecionar SP por padrão
+        const spOpt = Array.from(estadoEl.options).find(o => o.getAttribute('data-uf') === 'SP');
+        if (spOpt) {
+            estadoEl.value = spOpt.value;
+            console.log('✓ SP selecionado');
         }
 
-        // Selecionar SP por padrão (se existir)
-        estadoEl.value = 'Sao Paulo';
-        if (estadoEl.value !== 'Sao Paulo') {
-            // Se não achou, tenta por UF
-            const optSp = Array.from(estadoEl.options).find(o => o.getAttribute('data-uf') === 'SP');
-            if (optSp) estadoEl.value = optSp.value;
-        }
-        if (typeof $ !== 'undefined' && typeof $.fn.select2 === 'function') {
-            $(estadoEl).trigger('change');
-        }
+        // Carregar cidades para SP
+        console.log('Carregando cidades para SP...');
+        await populateCidades('SP', cidadeEl);
+        console.log('✓ Cidades carregadas');
 
-        // Carregar cidades para SP (ou UF resolvida acima)
-        const selectedOpt = estadoEl.options[estadoEl.selectedIndex];
-        const ufInit = selectedOpt ? (selectedOpt.getAttribute('data-uf') || 'SP') : 'SP';
-        await populateCidades(ufInit, cidadeEl);
-        // Selecionar São José do Rio Preto por padrão (se existir)
-        const defaultCity = 'São José do Rio Preto';
-        const hasDefault = Array.from(cidadeEl.options).some(o => o.text === defaultCity || o.value === defaultCity);
-        if (hasDefault) cidadeEl.value = defaultCity;
-        if (typeof $ !== 'undefined' && typeof $.fn.select2 === 'function') {
-            $(cidadeEl).trigger('change.select2');
+        // Remover listener anterior se existir
+        if (estadoChangeHandler) {
+            estadoEl.removeEventListener('change', estadoChangeHandler);
         }
 
-        console.log('Campos de localização inicializados com sucesso');
-
-        // Listener mudança de estado (compatível com Select2)
-        async function onEstadoChange() {
-            // Tentar pegar UF do option selecionado
-            let uf = '';
-            const selected = this.options ? this.options[this.selectedIndex] : null;
-            if (selected) uf = selected.getAttribute('data-uf') || '';
-            // Fallback: mapear pelo valor/nome
+        // Criar novo handler para mudança de estado
+        estadoChangeHandler = async function() {
+            console.log('Estado mudou');
+            const opt = this.options[this.selectedIndex];
+            const uf = opt ? opt.getAttribute('data-uf') : null;
+            
             if (!uf) {
-                const val = (this.value || '').trim();
-                if (val && Array.isArray(ibgeCache.estados)) {
-                    const found = ibgeCache.estados.find(e => {
-                        const nomeNorm = removeAccents(e.nome);
-                        return nomeNorm === val || e.sigla === val;
-                    });
-                    if (found) uf = found.sigla;
-                }
-            }
-            cidadeEl.innerHTML = '<option value="">Carregando...</option>';
-            if (!uf) {
+                console.log('❌ Sem UF');
                 cidadeEl.innerHTML = '<option value="">Selecione a cidade</option>';
-                if (typeof $ !== 'undefined' && typeof $.fn.select2 === 'function') {
-                    $(cidadeEl).val('').trigger('change.select2');
-                }
                 return;
             }
+            
+            console.log('→ Carregando cidades para:', uf);
+            cidadeEl.innerHTML = '<option value="">Carregando...</option>';
             await populateCidades(uf, cidadeEl);
+        };
+
+        // Adicionar listener
+        estadoEl.addEventListener('change', estadoChangeHandler);
+        console.log('✓ Listener adicionado');
+
+        // Aplicar Select2 se disponível (APÓS tudo estar pronto)
+        setTimeout(() => {
             if (typeof $ !== 'undefined' && typeof $.fn.select2 === 'function') {
-                $(cidadeEl).val('').trigger('change.select2');
+                try {
+                    console.log('Inicializando Select2...');
+                    const $estado = $(estadoEl);
+                    const $cidade = $(cidadeEl);
+                    
+                    // Destruir se já existir
+                    if ($estado.data('select2')) $estado.select2('destroy');
+                    if ($cidade.data('select2')) $cidade.select2('destroy');
+                    
+                    // Inicializar
+                    $estado.select2({
+                        placeholder: 'Selecione o estado',
+                        allowClear: true,
+                        width: '100%',
+                        dropdownParent: $('#mauticModal')
+                    });
+                    
+                    $cidade.select2({
+                        placeholder: 'Selecione a cidade',
+                        allowClear: true,
+                        width: '100%',
+                        dropdownParent: $('#mauticModal')
+                    });
+                    
+                    console.log('✓ Select2 inicializado');
+                } catch (e) {
+                    console.error('❌ Erro Select2:', e.message);
+                }
             }
-        }
-        estadoEl.addEventListener('change', onEstadoChange);
-        if (typeof $ !== 'undefined' && typeof $.fn.select2 === 'function') {
-            $(estadoEl).on('select2:select', function(){ onEstadoChange.call(estadoEl); });
-        }
+        }, 200);
+
+        console.log('=== PRONTO ===');
     }
 
     async function populateCidades(uf, cidadeEl) {
         console.log(`populateCidades('${uf}') chamada`);
         console.log('cidadeEl encontrado:', !!cidadeEl);
+        
+        // Mostrar loading
+        cidadeEl.innerHTML = '<option value="">Carregando cidades...</option>';
+        
         const municipios = await fetchMunicipios(uf);
         console.log(`Municipios carregados para ${uf}:`, municipios.length);
-        if (municipios.length) {
+        
+        if (municipios && municipios.length > 0) {
             console.log(`Populating cidadeEl com ${municipios.length} opções`);
-            cidadeEl.innerHTML = '<option value="">Selecione a cidade</option>' +
-                municipios.map(m => `<option value="${m.nome}">${m.nome}</option>`).join('');
+            let html = '<option value="">Selecione a cidade</option>';
+            municipios.forEach(m => {
+                html += `<option value="${m.nome}">${m.nome}</option>`;
+            });
+            cidadeEl.innerHTML = html;
             console.log('HTML das cidades inserido no cidadeEl');
-        } else {
-            console.log(`Nenhum municipio encontrado para ${uf} - usando fallback`);
-            // Fallback mínimo SP/SJRP
-            if (uf === 'SP') {
-                cidadeEl.innerHTML = '<option value="São José do Rio Preto">São José do Rio Preto</option>';
-                console.log('Fallback SP/SJRP aplicado');
-            } else {
-                cidadeEl.innerHTML = '<option value="">Não foi possível carregar cidades</option>';
-                console.log('Fallback genérico aplicado');
+            
+            // Atualizar Select2 se disponível
+            if (typeof $ !== 'undefined' && typeof $.fn.select2 === 'function') {
+                try {
+                    $(cidadeEl).trigger('change.select2');
+                } catch (e) {
+                    console.log('Erro ao atualizar Select2 na cidade:', e);
+                }
             }
+        } else {
+            console.log(`Nenhum municipio encontrado para ${uf} - usando cidades comuns`);
+            // Fallback com cidades comuns por estado
+            const commonCities = {
+                'SP': ['São Paulo', 'São José do Rio Preto', 'Campinas', 'Santos', 'Sorocaba', 'Ribeirão Preto'],
+                'MG': ['Belo Horizonte', 'Uberlândia', 'Contagem', 'Juiz de Fora', 'Montes Claros'],
+                'RJ': ['Rio de Janeiro', 'Niterói', 'Duque de Caxias', 'São Gonçalo', 'Nova Iguaçu'],
+                'BA': ['Salvador', 'Feira de Santana', 'Vitória da Conquista', 'Ilhéus', 'Jequié'],
+                'PR': ['Curitiba', 'Londrina', 'Maringá', 'Ponta Grossa', 'Cascavel'],
+                'SC': ['Florianópolis', 'Blumenau', 'Joinville', 'Lages', 'Criciúma'],
+                'RS': ['Porto Alegre', 'Caxias do Sul', 'Pelotas', 'Santa Maria', 'Gravataí']
+            };
+            
+            let html = '<option value="">Selecione a cidade</option>';
+            const cities = commonCities[uf] || [];
+            cities.forEach(city => {
+                html += `<option value="${city}">${city}</option>`;
+            });
+            cidadeEl.innerHTML = html;
+            
+            console.log(`Fallback aplicado para ${uf} com ${cities.length} cidades`);
         }
     }
     
@@ -882,10 +913,26 @@ document.addEventListener('DOMContentLoaded', function() {
         const emailField = document.getElementById('mauticform_input_formlp_email');
         if (emailField) {
             emailField.addEventListener('input', function() {
-                validateEmailField(this);
+                const value = this.value.trim();
+                const errorMsg = this.closest('.mauticform-row').querySelector('.mauticform-errormsg');
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!value) {
+                    if (errorMsg) errorMsg.textContent = 'Informe um email';
+                } else if (!emailRegex.test(value)) {
+                    if (errorMsg) errorMsg.textContent = 'Email inválido';
+                } else {
+                    if (errorMsg) errorMsg.style.display = 'none';
+                }
             });
             emailField.addEventListener('blur', function() {
-                validateEmailField(this);
+                const value = this.value.trim();
+                const errorMsg = this.closest('.mauticform-row').querySelector('.mauticform-errormsg');
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!value || !emailRegex.test(value)) {
+                    if (errorMsg) errorMsg.style.display = 'block';
+                } else {
+                    if (errorMsg) errorMsg.style.display = 'none';
+                }
             });
         }
         
@@ -897,6 +944,31 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             nameField.addEventListener('blur', function() {
                 validateNameField(this);
+            });
+        }
+        
+        // Adicionar validação em tempo real para senha
+        const senhaField = document.getElementById('mauticform_input_formlp_senha');
+        if (senhaField) {
+            senhaField.addEventListener('input', function() {
+                const value = this.value;
+                const errorMsg = this.closest('.mauticform-row').querySelector('.mauticform-errormsg');
+                if (!value) {
+                    if (errorMsg) errorMsg.textContent = 'Informe uma senha';
+                } else if (value.length < 6) {
+                    if (errorMsg) errorMsg.textContent = 'Senha deve ter no mínimo 6 caracteres';
+                } else {
+                    if (errorMsg) errorMsg.style.display = 'none';
+                }
+            });
+            senhaField.addEventListener('blur', function() {
+                const value = this.value;
+                const errorMsg = this.closest('.mauticform-row').querySelector('.mauticform-errormsg');
+                if (!value || value.length < 6) {
+                    if (errorMsg) errorMsg.style.display = 'block';
+                } else {
+                    if (errorMsg) errorMsg.style.display = 'none';
+                }
             });
         }
         
@@ -965,35 +1037,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    function validateEmailField(field) {
-        if (!field || !field.value.trim()) {
-            showFieldError(field, 'Email é obrigatório');
-            return false;
-        }
-        
-        if (!validateEmail(field.value.trim())) {
-            showFieldError(field, 'Digite um email válido');
-            return false;
-        } else {
-            hideFieldError(field);
-            return true;
-        }
-    }
-    
-    function validateNameField(field) {
-        if (!field || !field.value.trim()) {
-            showFieldError(field, 'Digite seu nome');
-            return false;
-        }
-        
-        if (field.value.trim().length < 2) {
-            showFieldError(field, 'Nome deve ter pelo menos 2 caracteres');
-            return false;
-        } else {
-            hideFieldError(field);
-            return true;
-        }
-    }
     
     function validateSelectField(field, errorMessage) {
         if (!field || !field.value) {
@@ -1366,6 +1409,42 @@ document.addEventListener('DOMContentLoaded', function() {
             formSubmitted = true;
             setLoadingState(true);
             
+            // Validar email e senha antes de enviar
+            const emailField = document.getElementById('mauticform_input_formlp_email');
+            const senhaField = document.getElementById('mauticform_input_formlp_senha');
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            let hasError = false;
+            
+            if (emailField) {
+                const email = emailField.value.trim();
+                const emailError = emailField.closest('.mauticform-row').querySelector('.mauticform-errormsg');
+                if (!email || !emailRegex.test(email)) {
+                    hasError = true;
+                    if (emailError) {
+                        emailError.textContent = 'Informe um email válido';
+                        emailError.style.display = 'block';
+                    }
+                }
+            }
+            
+            if (senhaField) {
+                const senha = senhaField.value;
+                const senhaError = senhaField.closest('.mauticform-row').querySelector('.mauticform-errormsg');
+                if (!senha || senha.length < 6) {
+                    hasError = true;
+                    if (senhaError) {
+                        senhaError.textContent = 'Senha deve ter no mínimo 6 caracteres';
+                        senhaError.style.display = 'block';
+                    }
+                }
+            }
+            
+            if (hasError) {
+                setLoadingState(false);
+                formSubmitted = false;
+                return;
+            }
+            
             // Preparar telefone: fixar BR (sem +55) e garantir DDD + número
             const phoneField = document.getElementById('mauticform_input_formlp_whatsapp');
             if (phoneField) {
@@ -1507,6 +1586,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 // Campos principais
                 appendToFormData('mauticform[nome]', document.getElementById('mauticform_input_formlp_nome')?.value || '');
+                appendToFormData('mauticform[email]', document.getElementById('mauticform_input_formlp_email')?.value || '');
+                appendToFormData('mauticform[senha]', document.getElementById('mauticform_input_formlp_senha')?.value || '');
                 // WhatsApp: enviar sem +55 (apenas DDD + número)
                 (function(){
                     const pf = document.getElementById('mauticform_input_formlp_whatsapp');
@@ -1655,6 +1736,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     // Campos principais
                     appendHidden('mauticform[nome]', document.getElementById('mauticform_input_formlp_nome')?.value || '');
+                    appendHidden('mauticform[email]', document.getElementById('mauticform_input_formlp_email')?.value || '');
+                    appendHidden('mauticform[senha]', document.getElementById('mauticform_input_formlp_senha')?.value || '');
                     // WhatsApp: enviar apenas DDD + número (sem +55)
                     (function(){
                         const pf = document.getElementById('mauticform_input_formlp_whatsapp');
@@ -2318,6 +2401,18 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     // ==================== FIM DO FORMULÁRIO DE CADASTRO ====================
     
+    // Pré-carregar estados e cidades para melhorar performance
+    console.log('Iniciando pré-carregamento de estados e cidades...');
+    fetchEstados().then(estados => {
+        console.log('✓ Estados pré-carregados:', estados.length);
+        // Pré-carregar cidades de SP também
+        return fetchMunicipios('SP').then(municipios => {
+            console.log('✓ Cidades de SP pré-carregadas:', municipios.length);
+        });
+    }).catch(err => {
+        console.log('⚠ Erro ao pré-carregar, mas aplicação continuará:', err.message);
+    });
+    
     console.log('ContrataJá - Landing Page carregada com sucesso!');
     console.log('Versão: 1.0.0');
 
@@ -2349,9 +2444,62 @@ document.addEventListener('DOMContentLoaded', function() {
             if (loginFormEl) loginFormEl.reset();
         }, 300);
     }
+    
+    // Login modal para prestadores
+    const prestadorLoginModal = document.getElementById('prestadorLoginModal');
+    const closePrestadorLoginBtn = document.getElementById('closePrestadorLoginModal');
+    const prestadorLoginForm = document.getElementById('prestadorLoginForm');
+    
+    function openPrestadorLoginModal() {
+        if (!prestadorLoginModal) return;
+        prestadorLoginModal.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+        setTimeout(() => {
+            prestadorLoginModal.style.opacity = '1';
+            prestadorLoginModal.querySelector('.modal-content').style.transform = 'translateY(0) scale(1)';
+        }, 10);
+    }
 
-    if (openLoginBtn) openLoginBtn.addEventListener('click', openLoginModal);
+    function closePrestadorLoginModal() {
+        if (!prestadorLoginModal) return;
+        prestadorLoginModal.style.opacity = '0';
+        prestadorLoginModal.querySelector('.modal-content').style.transform = 'translateY(-50px) scale(0.9)';
+        setTimeout(() => {
+            prestadorLoginModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+            if (prestadorLoginForm) prestadorLoginForm.reset();
+        }, 300);
+    }
+    
+    // Função para abrir registro de prestador
+    window.openPrestadorRegistro = function(e) {
+        e.preventDefault();
+        closePrestadorLoginModal();
+        setTimeout(() => {
+            openModal();
+        }, 300);
+    };
+    
+    if (openLoginBtn) openLoginBtn.addEventListener('click', openPrestadorLoginModal);
     if (closeLoginModalBtn) closeLoginModalBtn.addEventListener('click', closeLoginModal);
+    if (closePrestadorLoginBtn) closePrestadorLoginBtn.addEventListener('click', closePrestadorLoginModal);
+    
+    // Permitir fechamento do modal clicando fora dele
+    if (loginModal) {
+        loginModal.addEventListener('click', function(e) {
+            if (e.target === loginModal) {
+                closeLoginModal();
+            }
+        });
+    }
+    
+    if (prestadorLoginModal) {
+        prestadorLoginModal.addEventListener('click', function(e) {
+            if (e.target === prestadorLoginModal) {
+                closePrestadorLoginModal();
+            }
+        });
+    }
 
     // Signup button opens registration/mautic modal based on role
     if (openSigninBtn) {
@@ -2380,6 +2528,24 @@ document.addEventListener('DOMContentLoaded', function() {
                         content.style.transition = 'transform 0.3s ease';
                     }
                 }, 10);
+                
+                // Se for modal de prestador, inicializar os campos como faz o openModal
+                if (role === 'prestador') {
+                    showForm();
+                    initializePhoneInput();
+                    initializeCategoriaSelect();
+                    
+                    // Inicializar campos de localização
+                    setTimeout(() => {
+                        console.log('Executando initializeLocationFields() no openSigninBtn');
+                        initializeLocationFields().catch(err => {
+                            console.error('Erro ao inicializar campos:', err);
+                            setTimeout(() => {
+                                initializeLocationFields();
+                            }, 1000);
+                        });
+                    }, 100);
+                }
             } else {
                 console.error('Modal não encontrado. Role:', role, 'Prestador Modal:', !!mauticModalElement, 'Cliente Modal:', !!registrationModalElement);
             }
@@ -2452,6 +2618,75 @@ document.addEventListener('DOMContentLoaded', function() {
                 erroEl.textContent = 'Erro de conexão. Verifique se o XAMPP está rodando.';
             }).finally(() => {
                 if (submitLoginBtn) { submitLoginBtn.disabled = false; submitLoginBtn.textContent = 'Entrar'; }
+            });
+        });
+    }
+
+    // Handler para login de prestador com email e senha
+    if (prestadorLoginForm) {
+        prestadorLoginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('prestadorEmail').value.trim();
+            const senha = document.getElementById('prestadorSenha').value;
+            
+            if (!email || !senha) {
+                if (!email) {
+                    const emailError = prestadorLoginForm.querySelector('input[name="prestadorEmail"]').parentElement.querySelector('.form-error');
+                    if (emailError) emailError.style.display = 'block';
+                }
+                if (!senha) {
+                    const senhaError = prestadorLoginForm.querySelector('input[name="prestadorSenha"]').parentElement.querySelector('.form-error');
+                    if (senhaError) senhaError.style.display = 'block';
+                }
+                return;
+            }
+
+            const submitBtn = prestadorLoginForm.querySelector('button[type="submit"]');
+            if (submitBtn) { 
+                submitBtn.disabled = true; 
+                submitBtn.innerHTML = '<span style="display: inline-flex; align-items: center; gap: 8px;"><svg class="spinner" style="width: 16px; height: 16px;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-dasharray="31.416" stroke-dashoffset="31.416"><animate attributeName="stroke-dasharray" dur="2s" values="0 31.416;15.708 15.708;0 31.416" repeatCount="indefinite"/><animate attributeName="stroke-dashoffset" dur="2s" values="0;-15.708;-31.416" repeatCount="indefinite"/></circle></svg>Entrando...</span>';
+            }
+
+            // Chamar backend PHP para autenticar prestador
+            fetch('login.php', {
+                method: 'POST',
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    identificador: email, 
+                    senha: senha, 
+                    tipo: 'prestador' 
+                })
+            }).then(res => res.json()).then(data => {
+                if (data.success) {
+                    closePrestadorLoginModal();
+                    // Redirecionar para página de edição de perfil
+                    window.location.href = 'editar_perfil.php';
+                } else {
+                    let erroEl = prestadorLoginForm.querySelector('.form-error-geral');
+                    if (!erroEl) {
+                        erroEl = document.createElement('p');
+                        erroEl.className = 'form-error-geral';
+                        erroEl.style.cssText = 'color:#e74c3c;margin-bottom:8px;font-size:0.9rem;';
+                        prestadorLoginForm.prepend(erroEl);
+                    }
+                    erroEl.textContent = data.message || 'Email ou senha incorretos.';
+                }
+            }).catch(err => {
+                console.error('Erro login prestador:', err);
+                let erroEl = prestadorLoginForm.querySelector('.form-error-geral');
+                if (!erroEl) {
+                    erroEl = document.createElement('p');
+                    erroEl.className = 'form-error-geral';
+                    erroEl.style.cssText = 'color:#e74c3c;margin-bottom:8px;font-size:0.9rem;';
+                    prestadorLoginForm.prepend(erroEl);
+                }
+                erroEl.textContent = 'Erro de conexão. Verifique se o XAMPP está rodando.';
+            }).finally(() => {
+                if (submitBtn) { 
+                    submitBtn.disabled = false; 
+                    submitBtn.textContent = 'Entrar'; 
+                }
             });
         });
     }

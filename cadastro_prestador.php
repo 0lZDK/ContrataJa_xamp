@@ -31,6 +31,12 @@ if (empty($nome) || empty($email) || empty($usuario) || empty($senha)) {
     exit;
 }
 
+// Limpar telefone (aceitar string formatada)
+$telefone = preg_replace('/\D/', '', $telefone);
+
+// grupodeinteresse é opcional
+if (empty($grupodeinteresse)) $grupodeinteresse = '';
+
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     echo json_encode(["success" => false, "message" => "E-mail inválido."]);
     exit;
