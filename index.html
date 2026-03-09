@@ -43,7 +43,7 @@
                     <a href="cliente.html" class="nav-link">Para Clientes</a>
                 </div>
                 <div class="navbar-buttons header-auth">
-                    <button class="btn-signin btn-secondary" id="openSigninBtn">Sign in</button>
+                    <button class="btn-signin btn-secondary" id="openSigninBtn">Sign up</button>
                     <button class="btn-login btn-secondary" id="openLoginBtn">Login</button>
                 </div>
             </div>
@@ -413,6 +413,26 @@
                                             <span class="mauticform-errormsg" id="mauticform_errmsg_formlp_categoria_outros" style="display:none;">Descreva o serviço em "Outros"</span>
                                         </div>
                                         <span class="mauticform-errormsg" style="display:none;">Selecione ao menos uma categoria</span>
+                                    </div>
+                                    
+                                    <div id="mauticform_formlp_foto" class="mauticform-row mauticform-file mauticform-field-7" data-validate="foto" data-validation-type="file">
+                                        <label id="mauticform_label_formlp_foto" for="mauticform_input_formlp_foto" class="mauticform-label">Foto de Perfil (Opcional)</label>
+                                        <div class="file-upload-wrapper">
+                                            <input type="file" name="mauticform[foto]" id="mauticform_input_formlp_foto" class="mauticform-input file-input" accept="image/*" onchange="previewFoto(this)">
+                                            <div class="file-upload-label">
+                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                                    <polyline points="17 8 12 3 7 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                                    <line x1="12" y1="3" x2="12" y2="15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                                </svg>
+                                                <span>Clique para fazer upload ou arraste uma imagem</span>
+                                            </div>
+                                            <div id="foto-preview" class="foto-preview" style="display: none;">
+                                                <img id="preview-img" src="" alt="Prévia">
+                                                <button type="button" class="remove-foto" onclick="removeFoto()">✕</button>
+                                            </div>
+                                        </div>
+                                        <span class="mauticform-errormsg" style="display:none;">Formato de imagem inválido</span>
                                     </div>
                                     
                                     <div id="mauticform_formlp_consent" class="mauticform-row mauticform-checkbox mauticform-field-6 mauticform-required" data-validate="consent" data-validation-type="checkbox">

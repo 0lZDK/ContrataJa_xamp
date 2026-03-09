@@ -99,17 +99,51 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
+    // Mapeamento de data-service para nome do serviço filtro (baseado nas opções disponíveis)
+    const serviceNameMap = {
+        'assistencia': 'Eletricista',        // Assistência técnica → Eletricista
+        'aulas': 'Educação',                  // Aulas particulares → Educação
+        'auto': 'Consertos e Reparos',       // Auto serviços → Consertos e Reparos
+        'consultoria': 'Limpeza',             // Consultoria → Limpeza (genérico)
+        'moda': 'Beleza',                     // Moda & Beleza → Beleza
+        'saude': 'Limpeza',                   // Saúde & Bem-estar → Limpeza (genérico)
+        'domesticos': 'Limpeza',              // Serviços domésticos → Limpeza
+        'reforma': 'Construção e Reforma',   // Reforma & Reparos → Construção e Reforma
+        'eventos': 'Garçom',                  // Eventos & Festas → Garçom
+        'design': 'Limpeza'                   // Design & Criação → Limpeza (genérico)
+    };
+
     serviceCards.forEach(card => {
-        card.addEventListener('click', function() {
-            const service = this.dataset.service;
-            console.log('Serviço selecionado:', service);
+        card.addEventListener('click', function(e) {
+            e.preventDefault();
+            const serviceKey = this.dataset.service;
+            const serviceName = serviceNameMap[serviceKey] || serviceKey;
+            const serviceDisplay = this.querySelector('h3').textContent;
+            
+            console.log('Serviço selecionado:', serviceKey, '->', serviceName);
             
             this.style.transform = 'scale(0.95)';
             setTimeout(() => {
                 this.style.transform = '';
             }, 200);
             
-            alert(`Você selecionou: ${this.querySelector('h3').textContent}`);
+            // Comportamento diferente para clientes e prestadores
+            if (role === 'cliente') {
+                // Clientes: redirecionar para catálogo com filtro
+                window.location.href = `catalogo_prestadores.html?servico=${encodeURIComponent(serviceName)}`;
+            } else {
+                // Prestadores: abrir modal com categoria selecionada
+                openModal();
+                // Selecionar a categoria no formulário
+                const categoriaField = document.getElementById('mauticform_input_formlp_categoria');
+                if (categoriaField) {
+                    if (typeof $ !== 'undefined' && typeof $.fn.select2 === 'function') {
+                        $(categoriaField).val(serviceName).trigger('change');
+                    } else {
+                        categoriaField.value = serviceName;
+                    }
+                }
+            }
         });
         
         card.addEventListener('mouseenter', function() {
@@ -181,6 +215,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let formSubmitted = false;
     
     function openModal() {
+        console.log('openModal() chamada');
         modal.style.display = 'block';
         document.body.style.overflow = 'hidden';
         
@@ -192,10 +227,25 @@ document.addEventListener('DOMContentLoaded', function() {
         showForm();
         initializePhoneInput();
         initializeCategoriaSelect();
-        initializeLocationFields();
+        
+        // Inicializar campos de localização após garantir que o DOM está pronto
+        console.log('Agendando inicialização de campos de localização com 50ms de delay');
+        setTimeout(() => {
+            console.log('Executando initializeLocationFields() após 50ms de delay');
+            initializeLocationFields().catch(err => {
+                console.error('Erro ao inicializar campos de localização:', err);
+                console.log('Tentando novamente após 500ms de delay');
+                // Fallback: tentar novamente
+                setTimeout(() => {
+                    console.log('Executando retry de initializeLocationFields() após 500ms');
+                    initializeLocationFields();
+                }, 500);
+            });
+        }, 50);
     }
     
     function openModalWithSearchMessage(searchValue) {
+        console.log('openModalWithSearchMessage() chamada com searchValue:', searchValue);
         modal.style.display = 'block';
         document.body.style.overflow = 'hidden';
         
@@ -207,7 +257,21 @@ document.addEventListener('DOMContentLoaded', function() {
         showFormWithSearchMessage(searchValue);
         initializePhoneInput();
         initializeCategoriaSelect();
-        initializeLocationFields();
+        
+        // Inicializar campos de localização após garantir que o DOM está pronto
+        console.log('Agendando inicialização de campos de localização com 50ms de delay');
+        setTimeout(() => {
+            console.log('Executando initializeLocationFields() após 50ms de delay');
+            initializeLocationFields().catch(err => {
+                console.error('Erro ao inicializar campos de localização:', err);
+                console.log('Tentando novamente após 500ms de delay');
+                // Fallback: tentar novamente
+                setTimeout(() => {
+                    console.log('Executando retry de initializeLocationFields() após 500ms');
+                    initializeLocationFields();
+                }, 500);
+            });
+        }, 50);
     }
     
     function showForm() {
@@ -215,6 +279,12 @@ document.addEventListener('DOMContentLoaded', function() {
         successContainer.style.display = 'none';
         errorContainer.style.display = 'none';
         modalTitle.textContent = (role === 'cliente') ? 'Quero contratar serviços' : 'Quero ser Prestador de Serviços';
+        
+        // Mostrar/esconder campo de cidades próximas baseado no role
+        const cidadesProximasField = document.getElementById('mauticform_formlp_cidades_proximas');
+        if (cidadesProximasField) {
+            cidadesProximasField.style.display = (role === 'prestador') ? 'block' : 'none';
+        }
         
         // Esconder mensagem de busca
         const searchMessage = document.getElementById('searchMessage');
@@ -372,6 +442,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Tornar as funções globalmente acessíveis
     window.closeModalFunction = closeModalFunction;
+    window.openModal = openModal;
     window.showForm = showForm;
     
     function trackEvent(name, params = {}) {
@@ -470,15 +541,23 @@ document.addEventListener('DOMContentLoaded', function() {
         try { return (str || '').normalize('NFD').replace(/[\u0300-\u036f]/g, ''); } catch (e) { return str || ''; }
     }
     async function fetchEstados() {
-        if (ibgeCache.estados) return ibgeCache.estados;
+        if (ibgeCache.estados) {
+            console.log('fetchEstados() retornando do cache - total:', ibgeCache.estados.length);
+            return ibgeCache.estados;
+        }
+        console.log('fetchEstados() chamada - buscando da IBGE API...');
         try {
             const res = await fetch('https://servicodados.ibge.gov.br/api/v1/localidades/estados');
             const data = await res.json();
+            console.log('Resposta IBGE recebida - estados:', data.length);
             // Ordenar por sigla
             data.sort((a, b) => a.sigla.localeCompare(b.sigla));
             ibgeCache.estados = data;
+            console.log('Estados armazenados em cache');
             return data;
         } catch (e) {
+            console.error('Erro ao buscar estados IBGE:', e.message);
+            console.log('Usando fallback estático de estados');
             // Fallback estático (sigla + nome)
             const fallback = [
                 { id: 11, sigla: 'RO', nome: 'Rondonia' },
@@ -510,20 +589,29 @@ document.addEventListener('DOMContentLoaded', function() {
                 { id: 53, sigla: 'DF', nome: 'Distrito Federal' }
             ];
             ibgeCache.estados = fallback;
+            console.log('Fallback de estados armazenado em cache - total:', fallback.length);
             return fallback;
         }
     }
 
     async function fetchMunicipios(uf) {
-        if (ibgeCache.municipios[uf]) return ibgeCache.municipios[uf];
+        if (ibgeCache.municipios[uf]) {
+            console.log(`fetchMunicipios('${uf}') retornando do cache - total:`, ibgeCache.municipios[uf].length);
+            return ibgeCache.municipios[uf];
+        }
+        console.log(`fetchMunicipios('${uf}') chamada - buscando da IBGE API...`);
         try {
             const res = await fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${uf}/municipios`);
             const data = await res.json();
+            console.log(`Resposta IBGE recebida para ${uf} - cidades:`, data.length);
             // Ordenar por nome
             data.sort((a, b) => a.nome.localeCompare(b.nome));
             ibgeCache.municipios[uf] = data;
+            console.log(`Municipios do estado ${uf} armazenados em cache`);
             return data;
         } catch (e) {
+            console.error(`Erro ao buscar municipios para ${uf}:`, e.message);
+            console.log(`Retornando array vazio para municipios de ${uf}`);
             return [];
         }
     }
@@ -531,10 +619,20 @@ document.addEventListener('DOMContentLoaded', function() {
     async function initializeLocationFields() {
         const estadoEl = document.getElementById('mauticform_input_formlp_estado');
         const cidadeEl = document.getElementById('mauticform_input_formlp_cidade');
-        if (!estadoEl || !cidadeEl) return;
+        
+        console.log('initializeLocationFields() chamada');
+        console.log('estadoEl encontrado:', !!estadoEl);
+        console.log('cidadeEl encontrado:', !!cidadeEl);
+        
+        if (!estadoEl || !cidadeEl) {
+            console.error('Elementos de estado ou cidade não encontrados!');
+            return;
+        }
 
         // Popular estados
         const estados = await fetchEstados();
+        console.log('Estados carregados:', estados.length);
+        
         const optionsHtml = (estados && estados.length)
             ? ('<option value="">Selecione o estado</option>' + estados.map(e => {
                 const val = removeAccents(e.nome);
@@ -547,12 +645,19 @@ document.addEventListener('DOMContentLoaded', function() {
         if (typeof $ !== 'undefined' && typeof $.fn.select2 === 'function') {
             const $estado = $(estadoEl);
             const $cidade = $(cidadeEl);
-            if ($estado.data('select2')) { $estado.select2('destroy'); hadSelect2 = true; }
-            if ($cidade.data('select2')) { $cidade.select2('destroy'); }
+            if ($estado.data('select2')) { 
+                $estado.select2('destroy'); 
+                hadSelect2 = true; 
+            }
+            if ($cidade.data('select2')) { 
+                $cidade.select2('destroy'); 
+            }
         }
 
         estadoEl.innerHTML = optionsHtml;
         cidadeEl.innerHTML = '<option value="">Selecione a cidade</option>';
+        
+        console.log('HTML dos options inserido');
 
         // Reaplicar Select2
         if (typeof $ !== 'undefined' && typeof $.fn.select2 === 'function') {
@@ -560,6 +665,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const $cidade = $(cidadeEl);
             $estado.select2({ placeholder: 'Selecione o estado', allowClear: true, width: '100%', dropdownParent: $('#mauticModal') });
             $cidade.select2({ placeholder: 'Selecione a cidade', allowClear: true, width: '100%', dropdownParent: $('#mauticModal') });
+            console.log('Select2 reaplicado');
         }
 
         // Selecionar SP por padrão (se existir)
@@ -584,6 +690,8 @@ document.addEventListener('DOMContentLoaded', function() {
         if (typeof $ !== 'undefined' && typeof $.fn.select2 === 'function') {
             $(cidadeEl).trigger('change.select2');
         }
+
+        console.log('Campos de localização inicializados com sucesso');
 
         // Listener mudança de estado (compatível com Select2)
         async function onEstadoChange() {
@@ -622,16 +730,24 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     async function populateCidades(uf, cidadeEl) {
+        console.log(`populateCidades('${uf}') chamada`);
+        console.log('cidadeEl encontrado:', !!cidadeEl);
         const municipios = await fetchMunicipios(uf);
+        console.log(`Municipios carregados para ${uf}:`, municipios.length);
         if (municipios.length) {
+            console.log(`Populating cidadeEl com ${municipios.length} opções`);
             cidadeEl.innerHTML = '<option value="">Selecione a cidade</option>' +
                 municipios.map(m => `<option value="${m.nome}">${m.nome}</option>`).join('');
+            console.log('HTML das cidades inserido no cidadeEl');
         } else {
+            console.log(`Nenhum municipio encontrado para ${uf} - usando fallback`);
             // Fallback mínimo SP/SJRP
             if (uf === 'SP') {
                 cidadeEl.innerHTML = '<option value="São José do Rio Preto">São José do Rio Preto</option>';
+                console.log('Fallback SP/SJRP aplicado');
             } else {
                 cidadeEl.innerHTML = '<option value="">Não foi possível carregar cidades</option>';
+                console.log('Fallback genérico aplicado');
             }
         }
     }
@@ -1434,6 +1550,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Consentimento
                 appendToFormData('mauticform[consent]', document.getElementById('mauticform_input_formlp_consent')?.checked ? 'on' : '');
 
+                // Cidades Próximas (apenas para prestadores)
+                appendToFormData('mauticform[cidades_proximas]', document.getElementById('mauticform_input_formlp_cidades_proximas')?.checked ? 'Sim' : '');
+
                 // Campos ocultos do Mautic
                 appendToFormData('mauticform[formId]', document.getElementById('mauticform_formlp_id')?.value || '');
                 appendToFormData('mauticform[return]', document.getElementById('mauticform_formlp_return')?.value || '');
@@ -1578,6 +1697,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     // Consentimento
                     appendHidden('mauticform[consent]', document.getElementById('mauticform_input_formlp_consent')?.checked ? 'on' : '');
+
+                    // Cidades Próximas (apenas para prestadores)
+                    appendHidden('mauticform[cidades_proximas]', document.getElementById('mauticform_input_formlp_cidades_proximas')?.checked ? 'Sim' : '');
 
                     // Campos ocultos do Mautic
                     appendHidden('mauticform[formId]', document.getElementById('mauticform_formlp_id')?.value || '');
@@ -2199,7 +2321,7 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('ContrataJá - Landing Page carregada com sucesso!');
     console.log('Versão: 1.0.0');
 
-    // ----------------- LOGIN / SIGNIN e MODO ESCURO -----------------
+    // ----------------- LOGIN / SIGNUP e MODO ESCURO -----------------
     const openLoginBtn = document.getElementById('openLoginBtn');
     const openSigninBtn = document.getElementById('openSigninBtn');
     const loginModal = document.getElementById('loginModal');
@@ -2231,15 +2353,36 @@ document.addEventListener('DOMContentLoaded', function() {
     if (openLoginBtn) openLoginBtn.addEventListener('click', openLoginModal);
     if (closeLoginModalBtn) closeLoginModalBtn.addEventListener('click', closeLoginModal);
 
-    // Signin button opens registration modal (reuses existing)
-    if (openSigninBtn && registrationModal) {
-        openSigninBtn.addEventListener('click', function() {
-            registrationModal.style.display = 'block';
-            document.body.style.overflow = 'hidden';
-            setTimeout(() => {
-                registrationModal.style.opacity = '1';
-                registrationModal.querySelector('.modal-content').style.transform = 'translateY(0) scale(1)';
-            }, 10);
+    // Signup button opens registration/mautic modal based on role
+    if (openSigninBtn) {
+        openSigninBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            // Para prestadores, abrir mauticModal; para clientes, abrir registrationModal
+            const mauticModalElement = document.getElementById('mauticModal');
+            const registrationModalElement = document.getElementById('registrationModal');
+            const targetModal = role === 'prestador' ? mauticModalElement : registrationModalElement;
+            
+            if (targetModal) {
+                // Resetar estilos
+                targetModal.style.display = 'block';
+                targetModal.style.opacity = '0';
+                document.body.style.overflow = 'hidden';
+                
+                // Aplicar animação
+                setTimeout(() => {
+                    targetModal.style.opacity = '1';
+                    targetModal.style.transition = 'opacity 0.3s ease';
+                    const content = targetModal.querySelector('.modal-content');
+                    if (content) {
+                        content.style.transform = 'translateY(0) scale(1)';
+                        content.style.transition = 'transform 0.3s ease';
+                    }
+                }, 10);
+            } else {
+                console.error('Modal não encontrado. Role:', role, 'Prestador Modal:', !!mauticModalElement, 'Cliente Modal:', !!registrationModalElement);
+            }
         });
     }
 
@@ -2391,7 +2534,51 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Função global para alternar visibilidade de senha (usado no formulário de sign in)
+// Função global para alternar visibilidade de senha (usado no formulário de sign up)
+function togglePasswordVisibility(fieldId) {
+    const field = document.getElementById(fieldId);
+    if (!field) return;
+    
+    const isPassword = field.getAttribute('type') === 'password';
+    field.setAttribute('type', isPassword ? 'text' : 'password');
+    
+    // Atualizar o texto do botão
+    const button = field.parentElement.querySelector('.toggle-password');
+    if (button) {
+        button.textContent = isPassword ? 'Ocultar' : 'Mostrar';
+    }
+}
+
+// Funções para preview de foto
+function previewFoto(input) {
+    const preview = input.parentElement.querySelector('.foto-preview');
+    const previewImg = input.parentElement.querySelector('#preview-img');
+    const uploadLabel = input.parentElement.querySelector('.file-upload-label');
+
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+            previewImg.src = e.target.result;
+            preview.style.display = 'block';
+            uploadLabel.style.display = 'none';
+        };
+        
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+function removeFoto() {
+    const input = document.getElementById('mauticform_input_formlp_foto');
+    const preview = input.parentElement.querySelector('.foto-preview');
+    const uploadLabel = input.parentElement.querySelector('.file-upload-label');
+    
+    input.value = '';
+    preview.style.display = 'none';
+    uploadLabel.style.display = 'flex';
+}
+
+// Função global para alternar visibilidade de senha (usado no formulário de sign up)
 function togglePasswordVisibility(fieldId) {
     const field = document.getElementById(fieldId);
     if (!field) return;

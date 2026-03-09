@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ContrataJá - Catálogo de Prestadores</title>
+    <link rel="stylesheet" href="styles.css?v=20250829-1">
+    <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/css/select2.min.css" rel="stylesheet" />
+    <script>
+        // Apply theme immediately on load (before render)
+        (function() {
+            const THEME_KEY = 'cj_theme';
+            const saved = localStorage.getItem(THEME_KEY) || 'system';
+            const html = document.documentElement;
+            
+            if (saved === 'dark') {
+                html.classList.add('dark');
+            } else if (saved === 'light') {
+                html.classList.add('light');
+            } else {
+                // system
+                const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+                if (prefersDark) html.classList.add('dark');
+                else html.classList.add('light');
+            }
+        })();
+    </script>
+</head>
+<body class="theme-cliente" data-role="cliente">
+    <header class="header">
+        <nav class="navbar">
+            <div class="navbar-container">
+                <div class="navbar-logo">
+                    <img src="img/LogoContrata.png" alt="ContrataJá" class="logo-img" />
+                </div>
+                <div class="navbar-links">
+                    <a href="cliente.html" class="nav-link">Voltar</a>
+                </div>
+                <div class="navbar-buttons header-auth">
+                    <button class="btn-signin btn-secondary" id="openSigninBtn">Sign up</button>
+                    <button class="btn-login btn-secondary" id="openLoginBtn">Login</button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="catalogo-header">
+            <div class="section-container">
+                <div style="text-align: center; margin-bottom: 30px;">
+                    <h1 class="section-title">Encontre Prestadores</h1>
+                    <p style="font-size: 1.1rem; opacity: 0.8;">Selecione um serviço para conhecer profissionais qualificados</p>
+                </div>
+
+                <!-- Filtros de Categorias, Estado e Cidade -->
+                <div class="filter-container">
+                    <div class="filter-wrapper">
+                        <label for="categoriaFiltro">Filtrar por Serviço:</label>
+                        <select id="categoriaFiltro" class="filter-select">
+                            <option value="">Todos os Serviços</option>
+                            <option value="Limpeza">Limpeza</option>
+                            <option value="Consertos e Reparos">Consertos e Reparos</option>
+                            <option value="Ar condicionado">Ar Condicionado</option>
+                            <option value="Encanador">Encanador</option>
+                            <option value="Eletricista">Eletricista</option>
+                            <option value="Jardineiro">Jardineiro</option>
+                            <option value="Montador de Móveis">Montador de Móveis</option>
+                            <option value="Piscineiro">Piscineiro</option>
+                            <option value="Garçom">Garçom</option>
+                            <option value="Construção e Reforma">Construção e Reforma</option>
+                            <option value="Beleza">Beleza</option>
+                            <option value="Educação">Educação</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-wrapper">
+                        <label for="estadoFiltro">Filtrar por Estado:</label>
+                        <select id="estadoFiltro" class="filter-select">
+                            <option value="">Todos os Estados</option>
+                            <option value="SP">SP - São Paulo</option>
+                            <option value="MG">MG - Minas Gerais</option>
+                            <option value="RJ">RJ - Rio de Janeiro</option>
+                            <option value="BA">BA - Bahia</option>
+                            <option value="RS">RS - Rio Grande do Sul</option>
+                            <option value="PR">PR - Paraná</option>
+                            <option value="SC">SC - Santa Catarina</option>
+                            <option value="PE">PE - Pernambuco</option>
+                            <option value="GO">GO - Goiás</option>
+                            <option value="DF">DF - Distrito Federal</option>
+                            <option value="ES">ES - Espírito Santo</option>
+                            <option value="PB">PB - Paraíba</option>
+                            <option value="PA">PA - Pará</option>
+                            <option value="CE">CE - Ceará</option>
+                            <option value="SE">SE - Sergipe</option>
+                            <option value="AL">AL - Alagoas</option>
+                            <option value="MA">MA - Maranhão</option>
+                            <option value="PI">PI - Piauí</option>
+                            <option value="RN">RN - Rio Grande do Norte</option>
+                            <option value="MT">MT - Mato Grosso</option>
+                            <option value="MS">MS - Mato Grosso do Sul</option>
+                            <option value="TO">TO - Tocantins</option>
+                            <option value="AC">AC - Acre</option>
+                            <option value="AM">AM - Amazonas</option>
+                            <option value="RO">RO - Rondônia</option>
+                            <option value="AP">AP - Amapá</option>
+                            <option value="RR">RR - Roraima</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-wrapper">
+                        <label for="cidadeFiltro">Filtrar por Cidade:</label>
+                        <select id="cidadeFiltro" class="filter-select">
+                            <option value="">Todas as Cidades</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Lista de Prestadores -->
+        <section class="prestadores-section">
+            <div class="section-container">
+                <div id="carregando" class="loading-message">
+                    <div class="spinner"></div>
+                    <p>Carregando prestadores...</p>
+                </div>
+
+                <div id="prestadoresList" class="prestadores-grid">
+                    <!-- Prestadores serão carregados aqui via JavaScript -->
+                </div>
+
+                <div id="nenhumResultado" class="empty-state" style="display: none;">
+                    <div class="empty-icon">📋</div>
+                    <h3>Nenhum prestador encontrado</h3>
+                    <p>Tente selecionar outro serviço ou volte mais tarde</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Image lightbox modal para perfil do prestador -->
+    <div id="previewModal" class="modal">
+        <div class="modal-content full-width">
+            <button class="modal-close" id="closePreviewModal">&times;</button>
+            <div id="previewContent" class="preview-content">
+                <!-- Conteúdo do perfil será carregado aqui -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Dark mode toggle -->
+    <div id="darkModeToggle" class="dark-mode-toggle" title="Alternar modo escuro">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke="#fff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div id="themeMenu" class="theme-menu" aria-hidden="true">
+            <button class="theme-option" data-theme="dark">Escuro</button>
+            <button class="theme-option" data-theme="light">Claro</button>
+            <button class="theme-option" data-theme="system">Automático</button>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/js/select2.min.js"></script>
+    <script>
+        // Variáveis globais
+        let todosOsPrestadores = [];
+
+        // Mapeamento de categorias para imagens de serviços
+        const imagemPorCategoria = {
+            'assistencia': 'img/assistencia_tecnica.jpg',
+            'assistência': 'img/assistencia_tecnica.jpg',
+            'técnica': 'img/assistencia_tecnica.jpg',
+            'aulas': 'img/aulas_particulares.jpg',
+            'educação': 'img/aulas_particulares.jpg',
+            'auto': 'img/auto_servicos.jpg',
+            'serviços automotivos': 'img/auto_servicos.jpg',
+            'consultoria': 'img/consultoria.jpg',
+            'moda': 'img/moda_beleza1.jpg',
+            'beleza': 'img/moda_beleza1.jpg',
+            'saúde': 'img/Saude_BemEstarc.jpg',
+            'bem-estar': 'img/Saude_BemEstarc.jpg',
+            'domesticos': 'img/servico_domestico.jpg',
+            'serviços domésticos': 'img/servico_domestico.jpg',
+            'limpeza': 'img/servico_domestico.jpg',
+            'reforma': 'img/reforma_reparos.jpg',
+            'reparos': 'img/reforma_reparos.jpg',
+            'consertos': 'img/reforma_reparos.jpg',
+            'consertos e reparos': 'img/reforma_reparos.jpg',
+            'construção': 'img/reforma_reparos.jpg',
+            'construção e reforma': 'img/reforma_reparos.jpg',
+            'eventos': 'img/eventos_festas.jpeg',
+            'festas': 'img/eventos_festas.jpeg',
+            'design': 'img/design_criacao.jpg',
+            'criação': 'img/design_criacao.jpg',
+            'eletricista': 'img/assistencia_tecnica.jpg',
+            'ar condicionado': 'img/assistencia_tecnica.jpg',
+            'encanador': 'img/reforma_reparos.jpg',
+            'jardineiro': 'img/servico_domestico.jpg',
+            'montador de móveis': 'img/reforma_reparos.jpg',
+            'piscineiro': 'img/servico_domestico.jpg',
+            'garçom': 'img/eventos_festas.jpeg'
+        };
+
+        // Função para obter a melhor imagem para uma categoria
+        function obterImagemServico(categoria) {
+            if (!categoria) return 'img/assistencia_tecnica.jpg'; // imagem padrão
+            
+            const catLower = categoria.toLowerCase().trim();
+            
+            // Buscar correspondência exata ou parcial
+            for (const [key, value] of Object.entries(imagemPorCategoria)) {
+                if (catLower.includes(key) || key.includes(catLower.split(' ')[0])) {
+                    return value;
+                }
+            }
+            
+            // fallback para a primeira palavra
+            const primeiraWord = catLower.split(' ')[0];
+            return imagemPorCategoria[primeiraWord] || 'img/assistencia_tecnica.jpg';
+        }
+
+        // Carregar prestadores ao abrir a página
+        document.addEventListener('DOMContentLoaded', function() {
+            carregarPrestadores();
+            setupFiltros();
+            setupDarkMode();
+            setupAuthButtons();
+        });
+
+        // Carregar todos os prestadores
+        function carregarPrestadores() {
+            const carregando = document.getElementById('carregando');
+            carregando.style.display = 'block';
+
+            fetch('obter_prestadores.php')
+                .then(res => res.json())
+                .then(data => {
+                    carregando.style.display = 'none';
+
+                    if (data.success && data.prestadores.length > 0) {
+                        todosOsPrestadores = data.prestadores;
+                        exibirPrestadores(todosOsPrestadores);
+                    } else {
+                        mostrarVazio();
+                    }
+                })
+                .catch(err => {
+                    console.error('Erro ao carregar prestadores:', err);
+                    carregando.style.display = 'none';
+                    mostrarVazio();
+                });
+        }
+
+        // Exibir prestadores na página
+        function exibirPrestadores(prestadores) {
+            const lista = document.getElementById('prestadoresList');
+            const vazio = document.getElementById('nenhumResultado');
+
+            if (prestadores.length === 0) {
+                lista.innerHTML = '';
+                vazio.style.display = 'block';
+                return;
+            }
+
+            vazio.style.display = 'none';
+            lista.innerHTML = prestadores.map(p => {
+                const imagemServico = obterImagemServico(p.grupodeinteresse);
+                return `
+                    <div class="prestador-card" onclick="abrirPerfilPrestador(${p.id_prestador})">
+                        <div class="prestador-service-image">
+                            <img src="${imagemServico}" alt="${p.grupodeinteresse}" style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px 8px 0 0;">
+                        </div>
+                        <div class="prestador-info">
+                            <h3 class="prestador-nome">${p.nome}</h3>
+                            <p class="prestador-servico">${p.grupodeinteresse.substring(0, 50)}</p>
+                            <div class="prestador-localizacao">
+                                📍 ${p.cidade}, ${p.estado}
+                            </div>
+                        </div>
+                        <div class="prestador-action">
+                            <button class="btn btn-small btn-primary" onclick="event.stopPropagation(); abrirPerfilPrestador(${p.id_prestador})">Ver Perfil</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Mostrar estado vazio
+        function mostrarVazio() {
+            document.getElementById('prestadoresList').innerHTML = '';
+            document.getElementById('nenhumResultado').style.display = 'block';
+        }
+
+        // Setup de filtros
+        function setupFiltros() {
+            const filtroCategorias = document.getElementById('categoriaFiltro');
+            const filtroEstado = document.getElementById('estadoFiltro');
+            const filtroCidade = document.getElementById('cidadeFiltro');
+            
+            // Verificar se há parâmetro de serviço na URL
+            const params = new URLSearchParams(window.location.search);
+            const servicoFiltro = params.get('servico');
+            
+            // Se houver parâmetro, pré-selecionar o filtro
+            if (servicoFiltro) {
+                filtroCategorias.value = servicoFiltro;
+            }
+            
+            // Função para aplicar todos os filtros
+            function aplicarFiltros() {
+                const categoria = filtroCategorias.value.toLowerCase();
+                const estado = filtroEstado.value.toUpperCase();
+                const cidade = filtroCidade.value.toLowerCase();
+                
+                const filtrados = todosOsPrestadores.filter(p => {
+                    const matchCategoria = !categoria || p.grupodeinteresse.toLowerCase().includes(categoria);
+                    const matchEstado = !estado || p.estado.toUpperCase().trim() === estado;
+                    const matchCidade = !cidade || p.cidade.toLowerCase().includes(cidade);
+                    
+                    return matchCategoria && matchEstado && matchCidade;
+                });
+                
+                exibirPrestadores(filtrados);
+            }
+            
+            // Função para popular cidades baseadas no estado selecionado
+            function atualizarCidades() {
+                const estadoSelecionado = filtroEstado.value;
+                
+                // Obter todas as cidades únicas para o estado selecionado
+                let cidades = [];
+                if (estadoSelecionado) {
+                    cidades = [...new Set(
+                        todosOsPrestadores
+                            .filter(p => p.estado.toUpperCase() === estadoSelecionado)
+                            .map(p => p.cidade)
+                    )].sort();
+                } else {
+                    // Se nenhum estado selecionado, mostrar todas as cidades
+                    cidades = [...new Set(todosOsPrestadores.map(p => p.cidade))].sort();
+                }
+                
+                // Atualizar o select de cidades
+                filtroCidade.innerHTML = '<option value="">Todas as Cidades</option>';
+                cidades.forEach(cidade => {
+                    const option = document.createElement('option');
+                    option.value = cidade;
+                    option.textContent = cidade;
+                    filtroCidade.appendChild(option);
+                });
+            }
+            
+            // Listeners para mudanças nos filtros
+            filtroCategorias.addEventListener('change', aplicarFiltros);
+            filtroEstado.addEventListener('change', function() {
+                atualizarCidades();
+                filtroCidade.value = ''; // Reset cidade ao trocar estado
+                aplicarFiltros();
+            });
+            filtroCidade.addEventListener('change', aplicarFiltros);
+            
+            // Popular cidades inicialmente
+            atualizarCidades();
+            
+            // Disparar mudança inicial se houver filtro de serviço na URL
+            if (servicoFiltro) {
+                const event = new Event('change', { bubbles: true });
+                filtroCategorias.dispatchEvent(event);
+            }
+        }
+
+        // Abrir perfil do prestador
+        function abrirPerfilPrestador(id) {
+            const modal = document.getElementById('previewModal');
+            const content = document.getElementById('previewContent');
+
+            content.innerHTML = '<div style="text-align: center; padding: 30px;"><div class="spinner"></div><p>Carregando perfil...</p></div>';
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+
+            setTimeout(() => {
+                modal.style.opacity = '1';
+                modal.querySelector('.modal-content').style.transform = 'translateY(0) scale(1)';
+            }, 10);
+
+            fetch(`obter_perfil_prestador.php?id=${id}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        const p = data.prestador;
+                        content.innerHTML = `
+                            <div class="perfil-prestador">
+                                <div class="perfil-header">
+                                    <div class="perfil-avatar">
+                                        <div class="avatar-grande">👤</div>
+                                    </div>
+                                    <div class="perfil-dados">
+                                        <h2>${p.nome}</h2>
+                                        <p class="perfil-servico">${p.grupodeinteresse}</p>
+                                        <p class="perfil-localizacao">📍 ${p.cidade}, ${p.estado}</p>
+                                    </div>
+                                </div>
+
+                                <div class="perfil-contatos">
+                                    <h3>Contacto</h3>
+                                    <div class="contatos-grid">
+                                        <div class="contato-item">
+                                            <div class="contato-icon">📞</div>
+                                            <div class="contato-info">
+                                                <p class="contato-label">Telefone</p>
+                                                <p class="contato-valor">${formatarTelefone(p.telefone)}</p>
+                                            </div>
+                                        </div>
+                                        <div class="contato-item">
+                                            <div class="contato-icon">💬</div>
+                                            <div class="contato-info">
+                                                <p class="contato-label">WhatsApp</p>
+                                                <a href="https://wa.me/${p.telefone.replace(/\\D/g, '')}" target="_blank" class="contato-valor whatsapp-link">Enviar Mensagem</a>
+                                            </div>
+                                        </div>
+                                        <div class="contato-item">
+                                            <div class="contato-icon">📧</div>
+                                            <div class="contato-info">
+                                                <p class="contato-label">Email</p>
+                                                <a href="mailto:${p.email}" class="contato-valor">${p.email}</a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Botão WhatsApp Magnético -->
+                                    <div class="whatsapp-magnetic-container">
+                                        <a href="https://wa.me/${p.telefone.replace(/\\D/g, '')}" target="_blank" class="whatsapp-magnetic-btn">
+                                            <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M12 2C6.48 2 2 6.48 2 12c0 1.54.36 3 .97 4.29L2.05 22l6.3-1.93C10.7 21.75 11.32 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm0 18c-.6 0-1.21-.06-1.79-.18l-1.28.39 1.26-3.87c-.59-1.01-.94-2.19-.94-3.44 0-4.41 3.59-8 8-8s8 3.59 8 8-3.59 8-8 8z"/>
+                                                <path d="M8.5 13c.5 0 1 .5 1 1s-.5 1-1 1-1-.5-1-1 .5-1 1-1zm3-2c.5 0 1 .5 1 1s-.5 1-1 1-1-.5-1-1 .5-1 1-1zm3 2c.5 0 1 .5 1 1s-.5 1-1 1-1-.5-1-1 .5-1 1-1zm3-2c.5 0 1 .5 1 1s-.5 1-1 1-1-.5-1-1 .5-1 1-1z"/>
+                                            </svg>
+                                            Contactar no WhatsApp
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        content.innerHTML = '<div style="padding: 30px; text-align: center;"><p>Erro ao carregar perfil. Tente novamente.</p></div>';
+                    }
+                })
+                .catch(err => {
+                    console.error('Erro:', err);
+                    content.innerHTML = '<div style="padding: 30px; text-align: center;"><p>Erro de conexão.</p></div>';
+                });
+        }
+
+        // Fechar modal
+        document.getElementById('closePreviewModal')?.addEventListener('click', function() {
+            const modal = document.getElementById('previewModal');
+            modal.style.opacity = '0';
+            modal.querySelector('.modal-content').style.transform = 'translateY(-50px) scale(0.9)';
+            setTimeout(() => {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }, 300);
+        });
+
+        // Fechar ao clicar fora
+        document.getElementById('previewModal')?.addEventListener('click', function(e) {
+            if (e.target === this) {
+                document.getElementById('closePreviewModal').click();
+            }
+        });
+
+        // Função para formatar telefone
+        function formatarTelefone(telefone) {
+            const str = String(telefone).replace(/\\D/g, '');
+            if (str.length === 11) {
+                return `(${str.substring(0, 2)}) ${str.substring(2, 7)}-${str.substring(7)}`;
+            }
+            return telefone;
+        }
+
+        // Setup Dark Mode
+        function setupDarkMode() {
+            const THEME_KEY = 'cj_theme';
+            const toggle = document.getElementById('darkModeToggle');
+            const menu = document.getElementById('themeMenu');
+            const options = menu.querySelectorAll('.theme-option');
+
+            toggle.addEventListener('click', () => {
+                menu.setAttribute('aria-hidden', menu.getAttribute('aria-hidden') === 'true' ? 'false' : 'true');
+                menu.style.display = menu.style.display === 'none' ? 'flex' : 'none';
+            });
+
+            options.forEach(option => {
+                option.addEventListener('click', () => {
+                    const theme = option.getAttribute('data-theme');
+                    localStorage.setItem(THEME_KEY, theme);
+                    applyTheme(theme);
+                    menu.style.display = 'none';
+                    menu.setAttribute('aria-hidden', 'true');
+                });
+            });
+
+            function applyTheme(theme) {
+                const html = document.documentElement;
+                html.classList.remove('dark', 'light');
+                
+                if (theme === 'dark') {
+                    html.classList.add('dark');
+                } else if (theme === 'light') {
+                    html.classList.add('light');
+                } else {
+                    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+                    html.classList.add(prefersDark ? 'dark' : 'light');
+                }
+            }
+
+            const saved = localStorage.getItem(THEME_KEY) || 'system';
+            applyTheme(saved);
+        }
+
+        // Setup Auth buttons
+        function setupAuthButtons() {
+            const openSigninBtn = document.getElementById('openSigninBtn');
+            const openLoginBtn = document.getElementById('openLoginBtn');
+
+            if (openSigninBtn) {
+                openSigninBtn.addEventListener('click', function() {
+                    // Aqui você pode adicionar o comportamento do botão Sign Up
+                    console.log('Sign Up clicado');
+                });
+            }
+
+            if (openLoginBtn) {
+                openLoginBtn.addEventListener('click', function() {
+                    // Aqui você pode adicionar o comportamento do botão Login
+                    console.log('Login clicado');
+                });
+            }
+        }
+    </script>
+</body>
+</html>
