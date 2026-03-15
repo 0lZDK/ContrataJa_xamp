@@ -438,8 +438,8 @@
         </div>
     </div>
 
-    <!-- Modal do Formulário Mautic (Cliente) -->
-    <div id="mauticModal" class="modal">
+    <!-- Modal do Formulário de Cadastro (Cliente) -->
+    <div id="cadastroModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
                 <h2 id="modalTitle">Quero contratar serviços</h2>
@@ -453,60 +453,60 @@
                             <p>Conte com a gente! Deixe seus dados e avisaremos assim que houver profissionais para sua região.</p>
                         </div>
                     </div>
-                    <div id="mauticform_wrapper_formlp" class="mauticform_wrapper">
-                        <form autocomplete="off" accept-charset="UTF-8" role="form" method="post" action="https://mautic.indiqueiapp.com.br/form/submit?formId=2" id="mauticform_formlp" data-mautic-form="formlp" data-mautic-estado-alias="estado1" data-mautic-cidade-alias="cidade1" data-mautic-categoria-alias="categoria" form-lp>
-                            <div class="mauticform-error" id="mauticform_formlp_error" style="display: none;"></div>
-                            <div class="mauticform-message" id="mauticform_formlp_message" style="display: none;"></div>
-                            <div class="mauticform-innerform">
-                                <div class="mauticform-page-wrapper mauticform-page-1" data-mautic-form-page="1">
+                    <div id="cj-form-wrapper" class="cj-form-wrapper">
+                        <form autocomplete="off" accept-charset="UTF-8" role="form" method="post" id="cj-form-main" form-lp>
+                            <div class="cj-form-error" id="cj-form-error" style="display: none;"></div>
+                            <div class="cj-form-message" id="cj-form-message" style="display: none;"></div>
+                            <div class="cj-form-innerform">
+                                <div class="cj-form-page-wrapper cj-form-page-1">
                                     
                                     
-                                    <div id="mauticform_formlp_nome" class="mauticform-row mauticform-text mauticform-field-2 mauticform-required" data-validate="nome" data-validation-type="text">
-                                        <label id="mauticform_label_formlp_nome" for="mauticform_input_formlp_nome" class="mauticform-label">Nome</label>
-                                        <input type="text" name="mauticform[nome]" value="" id="mauticform_input_formlp_nome" class="mauticform-input" required>
-                                        <span class="mauticform-errormsg" style="display:none;">Digite seu nome</span>
+                                    <div id="cj-form-row-nome" class="cj-form-row cj-form-text cj-form-required" data-validate="nome" data-validation-type="text">
+                                        <label id="cj-form-label-nome" for="cj-form-nome" class="cj-form-label">Nome</label>
+                                        <input type="text" name="nome" value="" id="cj-form-nome" class="cj-form-input" required>
+                                        <span class="cj-form-errormsg" style="display:none;">Digite seu nome</span>
                                     </div>
                                     
-                                    <div id="mauticform_formlp_email" class="mauticform-row mauticform-email mauticform-required" data-validate="email" data-validation-type="email">
-                                        <label id="mauticform_label_formlp_email" for="mauticform_input_formlp_email" class="mauticform-label">Email</label>
-                                        <input type="email" name="mauticform[email]" value="" id="mauticform_input_formlp_email" class="mauticform-input" required>
-                                        <span class="mauticform-errormsg" style="display:none;">Informe um email válido</span>
+                                    <div id="cj-form-row-email" class="cj-form-row cj-form-email cj-form-required" data-validate="email" data-validation-type="email">
+                                        <label id="cj-form-label-email" for="cj-form-email" class="cj-form-label">Email</label>
+                                        <input type="email" name="email" value="" id="cj-form-email" class="cj-form-input" required>
+                                        <span class="cj-form-errormsg" style="display:none;">Informe um email válido</span>
                                     </div>
                                     
-                                    <div id="mauticform_formlp_senha" class="mauticform-row mauticform-password mauticform-required" data-validate="senha" data-validation-type="password">
-                                        <label id="mauticform_label_formlp_senha" for="mauticform_input_formlp_senha" class="mauticform-label">Senha</label>
+                                    <div id="cj-form-row-senha" class="cj-form-row cj-form-password cj-form-required" data-validate="senha" data-validation-type="password">
+                                        <label id="cj-form-label-senha" for="cj-form-senha" class="cj-form-label">Senha</label>
                                         <div style="position: relative;">
-                                            <input type="password" name="mauticform[senha]" value="" id="mauticform_input_formlp_senha" class="mauticform-input" required style="padding-right: 40px;">
-                                            <button type="button" class="toggle-password" onclick="togglePasswordVisibility('mauticform_input_formlp_senha')" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 0.85rem; color: #666;">Mostrar</button>
+                                            <input type="password" name="senha" value="" id="cj-form-senha" class="cj-form-input" required style="padding-right: 40px;">
+                                            <button type="button" class="toggle-password" onclick="togglePasswordVisibility('cj-form-senha')" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 0.85rem; color: #666;">Mostrar</button>
                                         </div>
-                                        <span class="mauticform-errormsg" style="display:none;">Senha deve ter no mínimo 6 caracteres</span>
+                                        <span class="cj-form-errormsg" style="display:none;">Senha deve ter no mínimo 6 caracteres</span>
                                     </div>
                                     
-                                    <div id="mauticform_formlp_whatsapp" class="mauticform-row mauticform-tel mauticform-field-3 mauticform-required" data-validate="whatsapp" data-validation-type="tel">
-                                        <label id="mauticform_label_formlp_whatsapp" for="mauticform_input_formlp_whatsapp" class="mauticform-label">Whatsapp</label>
-                                        <input type="tel" name="mauticform[whatsapp]" value="" id="mauticform_input_formlp_whatsapp" class="mauticform-input" required>
-                                        <span class="mauticform-errormsg" style="display:none;">Entraremos em contato via Whatsapp</span>
+                                    <div id="cj-form-row-whatsapp" class="cj-form-row cj-form-tel cj-form-required" data-validate="whatsapp" data-validation-type="tel">
+                                        <label id="cj-form-label-whatsapp" for="cj-form-whatsapp" class="cj-form-label">Whatsapp</label>
+                                        <input type="tel" name="whatsapp" value="" id="cj-form-whatsapp" class="cj-form-input" required>
+                                        <span class="cj-form-errormsg" style="display:none;">Entraremos em contato via Whatsapp</span>
                                     </div>
 
-                                    <div id="mauticform_formlp_estado" class="mauticform-row mauticform-select mauticform-required" data-validate="estado" data-validation-type="text">
-                                        <label id="mauticform_label_formlp_estado" for="mauticform_input_formlp_estado" class="mauticform-label">Estado</label>
-                                        <select name="mauticform[estado]" id="mauticform_input_formlp_estado" class="mauticform-selectbox" required>
+                                    <div id="cj-form-row-estado" class="cj-form-row cj-form-select-type cj-form-required" data-validate="estado" data-validation-type="text">
+                                        <label id="cj-form-label-estado" for="cj-form-estado" class="cj-form-label">Estado</label>
+                                        <select name="estado" id="cj-form-estado" class="cj-form-select" required>
                                             <option value="">Selecione o estado</option>
                                         </select>
-                                        <span class="mauticform-errormsg" style="display:none;">Selecione o estado</span>
+                                        <span class="cj-form-errormsg" style="display:none;">Selecione o estado</span>
                                     </div>
 
-                                    <div id="mauticform_formlp_cidade" class="mauticform-row mauticform-select mauticform-required" data-validate="cidade" data-validation-type="text">
-                                        <label id="mauticform_label_formlp_cidade" for="mauticform_input_formlp_cidade" class="mauticform-label">Cidade</label>
-                                        <select name="mauticform[cidade]" id="mauticform_input_formlp_cidade" class="mauticform-selectbox" required>
+                                    <div id="cj-form-row-cidade" class="cj-form-row cj-form-select-type cj-form-required" data-validate="cidade" data-validation-type="text">
+                                        <label id="cj-form-label-cidade" for="cj-form-cidade" class="cj-form-label">Cidade</label>
+                                        <select name="cidade" id="cj-form-cidade" class="cj-form-select" required>
                                             <option value="">Selecione a cidade</option>
                                         </select>
-                                        <span class="mauticform-errormsg" style="display:none;">Selecione a cidade</span>
+                                        <span class="cj-form-errormsg" style="display:none;">Selecione a cidade</span>
                                     </div>
                                     
-                                    <div id="mauticform_formlp_categoria" class="mauticform-row mauticform-select mauticform-field-4 mauticform-required" data-validate="categoria" data-validation-type="text">
-                                        <label id="mauticform_label_formlp_categoria" for="mauticform_input_formlp_categoria" class="mauticform-label">Grupos de Interesse</label>
-                                        <select name="mauticform[categoria]" id="mauticform_input_formlp_categoria" class="mauticform-selectbox categoria-select" multiple required>
+                                    <div id="cj-form-row-categoria" class="cj-form-row cj-form-select-type cj-form-required" data-validate="categoria" data-validation-type="text">
+                                        <label id="cj-form-label-categoria" for="cj-form-categoria" class="cj-form-label">Grupos de Interesse</label>
+                                        <select name="categoria" id="cj-form-categoria" class="cj-form-select categoria-select" multiple required>
                                             <option value="">Selecione um ou mais grupos</option>
                                             <option value="Manutenção & Reparos (Conserto de eletrodomésticos, Eletricista, Encanador, Marcenaria etc)">Manutenção & Reparos (Conserto de eletrodomésticos, Eletricista, Encanador, Marcenaria etc)</option>
                                             <option value="Instalações (Ar condicionado, Aparelhos eletrônicos e equipamentos)">Instalações (Ar condicionado, Aparelhos eletrônicos e equipamentos)</option>
@@ -520,25 +520,25 @@
                                             <option value="Outros">Outros (escreva)</option>
                                         </select>
                                         <div id="categoria_outros_wrapper" style="display:none; margin-top: 8px;">
-                                            <input type="text" id="mauticform_input_formlp_categoria_outros" class="mauticform-input" placeholder="Descreva aqui se escolheu Outros">
-                                            <span class="mauticform-errormsg" id="mauticform_errmsg_formlp_categoria_outros" style="display:none;">Descreva o que precisa em "Outros"</span>
+                                            <input type="text" id="cj-form-categoria-outros" class="cj-form-input" placeholder="Descreva aqui se escolheu Outros">
+                                            <span class="cj-form-errormsg" id="cj-form-errmsg-categoria-outros" style="display:none;">Descreva o que precisa em "Outros"</span>
                                         </div>
-                                        <span class="mauticform-errormsg" style="display:none;">Selecione um grupo de interesse</span>
+                                        <span class="cj-form-errormsg" style="display:none;">Selecione um grupo de interesse</span>
                                     </div>
                                     
                                     <!-- Campo apenas para prestadores -->
-                                    <div id="mauticform_formlp_cidades_proximas" class="mauticform-row mauticform-checkbox mauticform-field-8" style="display: none;" data-validate="cidades-proximas">
-                                        <label class="mauticform-label" for="mauticform_input_formlp_cidades_proximas">
-                                            <input type="checkbox" name="mauticform[cidades_proximas]" id="mauticform_input_formlp_cidades_proximas" value="Sim">
+                                    <div id="cj-form-row-cidades-proximas" class="cj-form-row cj-form-checkbox" style="display: none;" data-validate="cidades-proximas">
+                                        <label class="cj-form-label" for="cj-form-cidades-proximas">
+                                            <input type="checkbox" name="cidades_proximas" id="cj-form-cidades-proximas" value="Sim">
                                             ☑️ Desejo trabalhar apenas em cidades próximas à minha região
                                         </label>
-                                        <span class="mauticform-helptext">Você aparecerá apenas para clientes localizados perto da sua cidade</span>
+                                        <span class="cj-form-helptext">Você aparecerá apenas para clientes localizados perto da sua cidade</span>
                                     </div>
                                     
-                                    <div id="mauticform_formlp_foto" class="mauticform-row mauticform-file mauticform-field-7" data-validate="foto" data-validation-type="file">
-                                        <label id="mauticform_label_formlp_foto" for="mauticform_input_formlp_foto" class="mauticform-label">Foto de Perfil (Opcional)</label>
+                                    <div id="cj-form-row-foto" class="cj-form-row cj-form-file" data-validate="foto" data-validation-type="file">
+                                        <label id="cj-form-label-foto" for="cj-form-foto" class="cj-form-label">Foto de Perfil (Opcional)</label>
                                         <div class="file-upload-wrapper">
-                                            <input type="file" name="mauticform[foto]" id="mauticform_input_formlp_foto" class="mauticform-input file-input" accept="image/*" onchange="previewFoto(this)">
+                                            <input type="file" name="foto" id="cj-form-foto" class="cj-form-input file-input" accept="image/*" onchange="previewFoto(this)">
                                             <div class="file-upload-label">
                                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -552,19 +552,19 @@
                                                 <button type="button" class="remove-foto" onclick="removeFoto()">✕</button>
                                             </div>
                                         </div>
-                                        <span class="mauticform-errormsg" style="display:none;">Formato de imagem inválido</span>
+                                        <span class="cj-form-errormsg" style="display:none;">Formato de imagem inválido</span>
                                     </div>
                                     
-                                    <div id="mauticform_formlp_consent" class="mauticform-row mauticform-checkbox mauticform-field-6 mauticform-required" data-validate="consent" data-validation-type="checkbox">
-                                        <label class="mauticform-label" for="mauticform_input_formlp_consent">
-                                            <input type="checkbox" name="mauticform[consent]" id="mauticform_input_formlp_consent" required>
+                                    <div id="cj-form-row-consent" class="cj-form-row cj-form-checkbox cj-form-required" data-validate="consent" data-validation-type="checkbox">
+                                        <label class="cj-form-label" for="cj-form-consent">
+                                            <input type="checkbox" name="consent" id="cj-form-consent" required>
                                             Autorizo o contato e o tratamento dos meus dados conforme a LGPD.
                                         </label>
-                                        <span class="mauticform-errormsg" style="display:none;">É necessário aceitar para continuar</span>
+                                        <span class="cj-form-errormsg" style="display:none;">É necessário aceitar para continuar</span>
                                     </div>
                                     
-                                    <div id="mauticform_formlp_submit" class="mauticform-row mauticform-button-wrapper mauticform-field-5">
-                                        <button class="btn btn-ghost mauticform-button" name="mauticform[submit]" value="1" id="mauticform_input_formlp_submit" type="submit">
+                                    <div id="cj-form-row-submit" class="cj-form-row cj-form-button-wrapper">
+                                        <button class="btn btn-ghost cj-form-button" name="submit" value="1" id="cj-form-submit" type="submit">
                                             <span class="button-text">Enviar</span>
                                             <span class="button-loading" style="display: none;">
                                                 <svg class="spinner" viewBox="0 0 24 24">
@@ -579,9 +579,9 @@
                                     </div>
                                 </div>
                             </div>
-                            <input type="hidden" name="mauticform[formId]" id="mauticform_formlp_id" value="2">
-                            <input type="hidden" name="mauticform[return]" id="mauticform_formlp_return" value="">
-                            <input type="hidden" name="mauticform[formName]" id="mauticform_formlp_name" value="clientesform">
+                            <input type="hidden" name="formId" value="">
+                            <input type="hidden" name="return">
+                            <input type="hidden" name="formName" value="cadastro">
                         </form>
                     </div>
                 </div>
@@ -626,25 +626,7 @@
             </div>
         </div>
     </div>
-    <script type="text/javascript">
-        if (typeof MauticSDKLoaded == 'undefined') {
-            var MauticSDKLoaded = true;
-            var head            = document.getElementsByTagName('head')[0];
-            var script          = document.createElement('script');
-            script.type         = 'text/javascript';
-            script.src          = 'https://mautic.indiqueiapp.com.br/media/js/mautic-form.js?v577542b8';
-            script.onload       = function() {
-                if (typeof MauticSDK !== 'undefined' && MauticSDK.onLoad) {
-                    MauticSDK.onLoad();
-                }
-            };
-            head.appendChild(script);
-            var MauticDomain = 'https://mautic.indiqueiapp.com.br';
-            var MauticLang   = { 'submittingMessage': 'Por favor, aguarde...' };
-        } else if (typeof MauticSDK != 'undefined') {
-            MauticSDK.onLoad();
-        }
-    </script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.6/jquery.inputmask.min.js"></script>

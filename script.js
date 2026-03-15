@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Prestadores: abrir modal com categoria selecionada
                 openModal();
                 // Selecionar a categoria no formulário
-                const categoriaField = document.getElementById('mauticform_input_formlp_categoria');
+                const categoriaField = document.getElementById('cj-form-categoria');
                 if (categoriaField) {
                     if (typeof $ !== 'undefined' && typeof $.fn.select2 === 'function') {
                         $(categoriaField).val(serviceName).trigger('change');
@@ -204,7 +204,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // Modal functionality
-    const modal = document.getElementById('mauticModal');
+    const modal = document.getElementById('cadastroModal');
     const closeModal = document.getElementById('closeModal');
     const formContainer = document.getElementById('formContainer');
     const successContainer = document.getElementById('successContainer');
@@ -280,7 +280,7 @@ document.addEventListener('DOMContentLoaded', function() {
         modalTitle.textContent = (role === 'cliente') ? 'Quero contratar serviços' : 'Quero ser Prestador de Serviços';
         
         // Mostrar/esconder campo de cidades próximas baseado no role
-        const cidadesProximasField = document.getElementById('mauticform_formlp_cidades_proximas');
+        const cidadesProximasField = document.getElementById('cj-form-cidades-proximas');
         if (cidadesProximasField) {
             cidadesProximasField.style.display = (role === 'prestador') ? 'block' : 'none';
         }
@@ -310,7 +310,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function initializeCategoriaSelect() {
-        const categoriaField = document.getElementById('mauticform_input_formlp_categoria');
+        const categoriaField = document.getElementById('cj-form-categoria');
         if (!categoriaField) return;
 
         // Garante envio em campo único (pipe) e remove name do select
@@ -318,24 +318,24 @@ document.addEventListener('DOMContentLoaded', function() {
             const $field = (typeof $ !== 'undefined') ? $(categoriaField) : null;
             let values = $field ? ($field.val() || []) : Array.from(categoriaField.selectedOptions).map(o => o.value);
             // Tratar "Outros"
-            const outrosInput = document.getElementById('mauticform_input_formlp_categoria_outros');
+            const outrosInput = document.getElementById('cj-form-categoria_outros');
             if (values.includes('Outros')) {
                 const customVal = (outrosInput && outrosInput.value.trim()) ? outrosInput.value.trim() : '';
                 values = values.filter(v => v !== 'Outros');
                 if (customVal) values.push(customVal);
             }
-            // Separador: pipe com espaços (compatível com Mautic)
+            // Separador: pipe com espaços (compatível com o backend)
             values = values.filter(v => (v || '').trim().length > 0);
             const joined = values.join(' | ');
-            let hidden = document.getElementById('mauticform_hidden_categoria');
+            let hidden = document.getElementById('cj-form-hidden-categoria');
             if (!hidden) {
                 hidden = document.createElement('input');
                 hidden.type = 'hidden';
-                hidden.id = 'mauticform_hidden_categoria';
-                const form = document.getElementById('mauticform_formlp');
+                hidden.id = 'cj-form-hidden-categoria';
+                const form = document.getElementById('cj-form-main');
                 if (form) {
-                    const categoriaAlias = (form && form.dataset && form.dataset.mauticCategoriaAlias) ? form.dataset.mauticCategoriaAlias : 'categoria';
-                    hidden.name = `mauticform[${categoriaAlias}]`;
+                    const categoriaAlias = (form && form.dataset && form.dataset.categoriaAlias) ? form.dataset.categoriaAlias : 'categoria';
+                    hidden.name = `cj-form[${categoriaAlias}]`;
                     form.appendChild(hidden);
                 }
             }
@@ -354,7 +354,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Função para mostrar/ocultar campo "Outros"
         function toggleOutrosField() {
             const outrosWrapper = document.getElementById('categoria_outros_wrapper');
-            const outrosInput = document.getElementById('mauticform_input_formlp_categoria_outros');
+            const outrosInput = document.getElementById('cj-form-categoria_outros');
             if (!outrosWrapper || !outrosInput) return;
 
             const selectedValues = categoriaField.multiple 
@@ -392,7 +392,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     width: '100%',
                     tags: true,
                     tokenSeparators: [',', ';', '|'],
-                    dropdownParent: $('#mauticModal'),
+                    dropdownParent: $('#cadastroModal'),
                     createTag: function(params) {
                         const term = $.trim(params.term);
                         if (term === '') return null;
@@ -412,7 +412,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Atualizar quando digitar no campo "Outros"
-        const outrosInput = document.getElementById('mauticform_input_formlp_categoria_outros');
+        const outrosInput = document.getElementById('cj-form-categoria_outros');
         if (outrosInput) {
             ['input','blur'].forEach(evt => outrosInput.addEventListener(evt, updateHiddenCategoria));
         }
@@ -486,17 +486,17 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function resetForm() {
-        const form = document.getElementById('mauticform_formlp');
+        const form = document.getElementById('cj-form-main');
         if (form) {
             form.reset();
         }
         
-        const errorDiv = document.getElementById('mauticform_formlp_error');
-        const messageDiv = document.getElementById('mauticform_formlp_message');
+        const errorDiv = document.getElementById('cj-form-error');
+        const messageDiv = document.getElementById('cj-form-message');
         if (errorDiv) errorDiv.style.display = 'none';
         if (messageDiv) messageDiv.style.display = 'none';
         
-        const submitButton = document.getElementById('mauticform_input_formlp_submit');
+        const submitButton = document.getElementById('cj-form-submit');
         if (submitButton) {
             submitButton.disabled = false;
             const buttonText = submitButton.querySelector('.button-text');
@@ -507,7 +507,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Resetar campo "Outros"
         const outrosWrapper = document.getElementById('categoria_outros_wrapper');
-        const outrosInput = document.getElementById('mauticform_input_formlp_categoria_outros');
+        const outrosInput = document.getElementById('cj-form-categoria_outros');
         if (outrosWrapper) outrosWrapper.style.display = 'none';
         if (outrosInput) {
             outrosInput.value = '';
@@ -515,7 +515,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         // Resetar Select2 se disponível
-        const categoriaField = document.getElementById('mauticform_input_formlp_categoria');
+        const categoriaField = document.getElementById('cj-form-categoria');
         if (categoriaField && typeof $ !== 'undefined' && typeof $.fn.select2 === 'function') {
             $(categoriaField).val(null).trigger('change');
         }
@@ -525,10 +525,10 @@ document.addEventListener('DOMContentLoaded', function() {
             categoriaField.disabled = false;
             // garantir que tenha um name padrão presente após reset
             if (!categoriaField.getAttribute('name')) {
-                categoriaField.name = 'mauticform[categoria]';
+                categoriaField.name = 'cj-form[categoria]';
             }
             // Remover input oculto se existir
-            const hidden = document.getElementById('mauticform_hidden_categoria');
+            const hidden = document.getElementById('cj-form-hidden-categoria');
             if (hidden) hidden.remove();
         }
 
@@ -618,8 +618,8 @@ document.addEventListener('DOMContentLoaded', function() {
     let estadoChangeHandler = null;
 
     async function initializeLocationFields() {
-        const estadoEl = document.getElementById('mauticform_input_formlp_estado');
-        const cidadeEl = document.getElementById('mauticform_input_formlp_cidade');
+        const estadoEl = document.getElementById('cj-form-estado');
+        const cidadeEl = document.getElementById('cj-form-cidade');
         
         console.log('=== INITIALIZE LOCATION FIELDS ===');
         console.log('estadoEl:', !!estadoEl);
@@ -712,14 +712,14 @@ document.addEventListener('DOMContentLoaded', function() {
                         placeholder: 'Selecione o estado',
                         allowClear: true,
                         width: '100%',
-                        dropdownParent: $('#mauticModal')
+                        dropdownParent: $('#cadastroModal')
                     });
                     
                     $cidade.select2({
                         placeholder: 'Selecione a cidade',
                         allowClear: true,
                         width: '100%',
-                        dropdownParent: $('#mauticModal')
+                        dropdownParent: $('#cadastroModal')
                     });
                     
                     console.log('✓ Select2 inicializado');
@@ -784,7 +784,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function initializePhoneInput() {
-        const phoneField = document.getElementById('mauticform_input_formlp_whatsapp');
+        const phoneField = document.getElementById('cj-form-whatsapp');
         if (!phoneField) {
             console.warn('Campo de telefone não encontrado');
             return;
@@ -888,7 +888,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         // Adicionar event listener para o select de categoria
-        const categoriaField = document.getElementById('mauticform_input_formlp_categoria');
+        const categoriaField = document.getElementById('cj-form-categoria');
         if (categoriaField) {
             categoriaField.addEventListener('change', function() {
                 const selectedValue = this.value;
@@ -910,11 +910,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         // Adicionar validação em tempo real para o campo de email
-        const emailField = document.getElementById('mauticform_input_formlp_email');
+        const emailField = document.getElementById('cj-form-email');
         if (emailField) {
             emailField.addEventListener('input', function() {
                 const value = this.value.trim();
-                const errorMsg = this.closest('.mauticform-row').querySelector('.mauticform-errormsg');
+                const errorMsg = this.closest('.cj-form-row').querySelector('.cj-form-errormsg');
                 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 if (!value) {
                     if (errorMsg) errorMsg.textContent = 'Informe um email';
@@ -926,7 +926,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             emailField.addEventListener('blur', function() {
                 const value = this.value.trim();
-                const errorMsg = this.closest('.mauticform-row').querySelector('.mauticform-errormsg');
+                const errorMsg = this.closest('.cj-form-row').querySelector('.cj-form-errormsg');
                 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 if (!value || !emailRegex.test(value)) {
                     if (errorMsg) errorMsg.style.display = 'block';
@@ -937,7 +937,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         // Adicionar validação em tempo real para o campo de nome
-        const nameField = document.getElementById('mauticform_input_formlp_nome');
+        const nameField = document.getElementById('cj-form-nome');
         if (nameField) {
             nameField.addEventListener('input', function() {
                 validateNameField(this);
@@ -948,11 +948,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         // Adicionar validação em tempo real para senha
-        const senhaField = document.getElementById('mauticform_input_formlp_senha');
+        const senhaField = document.getElementById('cj-form-senha');
         if (senhaField) {
             senhaField.addEventListener('input', function() {
                 const value = this.value;
-                const errorMsg = this.closest('.mauticform-row').querySelector('.mauticform-errormsg');
+                const errorMsg = this.closest('.cj-form-row').querySelector('.cj-form-errormsg');
                 if (!value) {
                     if (errorMsg) errorMsg.textContent = 'Informe uma senha';
                 } else if (value.length < 6) {
@@ -963,7 +963,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             senhaField.addEventListener('blur', function() {
                 const value = this.value;
-                const errorMsg = this.closest('.mauticform-row').querySelector('.mauticform-errormsg');
+                const errorMsg = this.closest('.cj-form-row').querySelector('.cj-form-errormsg');
                 if (!value || value.length < 6) {
                     if (errorMsg) errorMsg.style.display = 'block';
                 } else {
@@ -973,8 +973,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         // Adicionar validação em tempo real para os campos de estado e cidade
-        const estadoField = document.getElementById('mauticform_input_formlp_estado');
-        const cidadeField = document.getElementById('mauticform_input_formlp_cidade');
+        const estadoField = document.getElementById('cj-form-estado');
+        const cidadeField = document.getElementById('cj-form-cidade');
         
         if (estadoField) {
             estadoField.addEventListener('change', function() {
@@ -996,7 +996,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         // Adicionar validação em tempo real para o campo de consentimento
-        const consentField = document.getElementById('mauticform_input_formlp_consent');
+        const consentField = document.getElementById('cj-form-consent');
         if (consentField) {
             consentField.addEventListener('change', function() {
                 validateConsentField(this);
@@ -1075,13 +1075,13 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!field) return false;
         
         if (!field.checked) {
-            const errorSpan = field.closest('.mauticform-row')?.querySelector('.mauticform-errormsg');
+            const errorSpan = field.closest('.cj-form-row')?.querySelector('.cj-form-errormsg');
             if (errorSpan) {
                 errorSpan.style.display = 'block';
             }
             return false;
         } else {
-            const errorSpan = field.closest('.mauticform-row')?.querySelector('.mauticform-errormsg');
+            const errorSpan = field.closest('.cj-form-row')?.querySelector('.cj-form-errormsg');
             if (errorSpan) {
                 errorSpan.style.display = 'none';
             }
@@ -1091,13 +1091,13 @@ document.addEventListener('DOMContentLoaded', function() {
     
     function validateForm() {
         // Função mantida para compatibilidade, mas não será mais usada para validação
-        const emailField = document.getElementById('mauticform_input_formlp_email');
-        const nameField = document.getElementById('mauticform_input_formlp_nome');
-        const phoneField = document.getElementById('mauticform_input_formlp_whatsapp');
-        const categoriaField = document.getElementById('mauticform_input_formlp_categoria');
-        const estadoField = document.getElementById('mauticform_input_formlp_estado');
-        const cidadeField = document.getElementById('mauticform_input_formlp_cidade');
-        const consentField = document.getElementById('mauticform_input_formlp_consent');
+        const emailField = document.getElementById('cj-form-email');
+        const nameField = document.getElementById('cj-form-nome');
+        const phoneField = document.getElementById('cj-form-whatsapp');
+        const categoriaField = document.getElementById('cj-form-categoria');
+        const estadoField = document.getElementById('cj-form-estado');
+        const cidadeField = document.getElementById('cj-form-cidade');
+        const consentField = document.getElementById('cj-form-consent');
         
         console.log('Campos encontrados:', {
             email: !!emailField,
@@ -1239,7 +1239,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Se "Outros" foi selecionado, validar o campo de texto
                 if (values.includes('Outros')) {
                     console.log('"Outros" selecionado, validando campo de texto');
-                    const outrosInput = document.getElementById('mauticform_input_formlp_categoria_outros');
+                    const outrosInput = document.getElementById('cj-form-categoria_outros');
                     console.log('outrosInput:', outrosInput);
                     console.log('outrosInput value:', outrosInput?.value);
                     
@@ -1277,14 +1277,14 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!consentField.checked) {
                 console.log('Consentimento não marcado - erro');
                 // Exibe erro no container do checkbox
-                const errorSpan = consentField.closest('.mauticform-row')?.querySelector('.mauticform-errormsg');
+                const errorSpan = consentField.closest('.cj-form-row')?.querySelector('.cj-form-errormsg');
                 if (errorSpan) {
                     errorSpan.style.display = 'block';
                 }
                 isValid = false;
             } else {
                 console.log('Consentimento válido');
-                const errorSpan = consentField.closest('.mauticform-row')?.querySelector('.mauticform-errormsg');
+                const errorSpan = consentField.closest('.cj-form-row')?.querySelector('.cj-form-errormsg');
                 if (errorSpan) {
                     errorSpan.style.display = 'none';
                 }
@@ -1313,10 +1313,10 @@ document.addEventListener('DOMContentLoaded', function() {
         let errorSpan;
         
         // Para o campo "Outros", procurar pelo span de erro específico
-        if (field.id === 'mauticform_input_formlp_categoria_outros') {
-            errorSpan = document.getElementById('mauticform_errmsg_formlp_categoria_outros');
+        if (field.id === 'cj-form-categoria_outros') {
+            errorSpan = document.getElementById('cj-form-errmsg-categoria-outros');
         } else {
-            errorSpan = field.parentNode?.querySelector('.mauticform-errormsg');
+            errorSpan = field.parentNode?.querySelector('.cj-form-errormsg');
         }
         
         if (errorSpan) {
@@ -1336,10 +1336,10 @@ document.addEventListener('DOMContentLoaded', function() {
         let errorSpan;
         
         // Para o campo "Outros", procurar pelo span de erro específico
-        if (field.id === 'mauticform_input_formlp_categoria_outros') {
-            errorSpan = document.getElementById('mauticform_errmsg_formlp_categoria_outros');
+        if (field.id === 'cj-form-categoria_outros') {
+            errorSpan = document.getElementById('cj-form-errmsg-categoria-outros');
         } else {
-            errorSpan = field.parentNode?.querySelector('.mauticform-errormsg');
+            errorSpan = field.parentNode?.querySelector('.cj-form-errormsg');
         }
         
         if (errorSpan) {
@@ -1351,7 +1351,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     function setLoadingState(loading) {
         console.log('setLoadingState chamada com loading =', loading);
-        const submitButton = document.getElementById('mauticform_input_formlp_submit');
+        const submitButton = document.getElementById('cj-form-submit');
         console.log('submitButton encontrado:', !!submitButton);
         
         if (submitButton) {
@@ -1390,11 +1390,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Form submission handling - deixar o Mautic gerenciar o envio
-    const mauticForm = document.getElementById('mauticform_formlp');
-    if (mauticForm) {
-        // Permitir envio direto para Mautic sem validação local
-        mauticForm.addEventListener('submit', function(e) {
+    // Form submission handling - envio do formulário de cadastro
+    const cadastroForm = document.getElementById('cj-form-main');
+    if (cadastroForm) {
+        // Permitir envio direto sem validação local
+        cadastroForm.addEventListener('submit', function(e) {
             console.log('=== EVENTO SUBMIT CAPTURADO ===');
             console.log('Evento submit do formulário capturado');
             console.log('formSubmitted atual:', formSubmitted);
@@ -1405,19 +1405,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             
-            console.log('Permitindo envio direto para Mautic - sem validação local');
+            console.log('Permitindo envio do formulário');
             formSubmitted = true;
             setLoadingState(true);
             
             // Validar email e senha antes de enviar
-            const emailField = document.getElementById('mauticform_input_formlp_email');
-            const senhaField = document.getElementById('mauticform_input_formlp_senha');
+            const emailField = document.getElementById('cj-form-email');
+            const senhaField = document.getElementById('cj-form-senha');
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             let hasError = false;
             
             if (emailField) {
                 const email = emailField.value.trim();
-                const emailError = emailField.closest('.mauticform-row').querySelector('.mauticform-errormsg');
+                const emailError = emailField.closest('.cj-form-row').querySelector('.cj-form-errormsg');
                 if (!email || !emailRegex.test(email)) {
                     hasError = true;
                     if (emailError) {
@@ -1429,7 +1429,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (senhaField) {
                 const senha = senhaField.value;
-                const senhaError = senhaField.closest('.mauticform-row').querySelector('.mauticform-errormsg');
+                const senhaError = senhaField.closest('.cj-form-row').querySelector('.cj-form-errormsg');
                 if (!senha || senha.length < 6) {
                     hasError = true;
                     if (senhaError) {
@@ -1446,7 +1446,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             // Preparar telefone: fixar BR (sem +55) e garantir DDD + número
-            const phoneField = document.getElementById('mauticform_input_formlp_whatsapp');
+            const phoneField = document.getElementById('cj-form-whatsapp');
             if (phoneField) {
                 const raw = (phoneField.value || '').toString();
                 let digits = raw.replace(/\D/g, '');
@@ -1469,14 +1469,14 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             // Preparar categoria para envio
-            const categoriaField = document.getElementById('mauticform_input_formlp_categoria');
+            const categoriaField = document.getElementById('cj-form-categoria');
             if (categoriaField) {
                 const $field = (typeof $ !== 'undefined') ? $(categoriaField) : null;
                 if (categoriaField.multiple) {
                     let values = $field ? ($field.val() || []) : Array.from(categoriaField.selectedOptions).map(o => o.value);
 
                     // Se "Outros" estiver selecionado e houver texto, criar opção dinâmica e desmarcar "Outros"
-                    const outrosInput = document.getElementById('mauticform_input_formlp_categoria_outros');
+                    const outrosInput = document.getElementById('cj-form-categoria_outros');
                     if (values.includes('Outros') && outrosInput && outrosInput.value.trim()) {
                         const customVal = outrosInput.value.trim();
                         // Verifica se já existe option com esse valor
@@ -1500,15 +1500,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     // Enviar como string única separada por pipe
                     const pipe = values.join(' | ');
-                    let hidden = document.getElementById('mauticform_hidden_categoria');
+                    let hidden = document.getElementById('cj-form-hidden-categoria');
                     if (!hidden) {
                         hidden = document.createElement('input');
                         hidden.type = 'hidden';
-                        hidden.id = 'mauticform_hidden_categoria';
+                        hidden.id = 'cj-form-hidden-categoria';
                         // Alias dinâmico para categoria
-                        const categoriaAlias = (mauticForm && mauticForm.dataset && mauticForm.dataset.mauticCategoriaAlias) ? mauticForm.dataset.mauticCategoriaAlias : 'categoria';
-                        hidden.name = `mauticform[${categoriaAlias}]`;
-                        mauticForm.appendChild(hidden);
+                        const categoriaAlias = (cadastroForm && cadastroForm.dataset && cadastroForm.dataset.categoriaAlias) ? cadastroForm.dataset.categoriaAlias : 'categoria';
+                        hidden.name = `cj-form[${categoriaAlias}]`;
+                        cadastroForm.appendChild(hidden);
                     }
                     hidden.value = pipe;
                     // Evitar envio duplicado: remover o name do select original e desabilitar
@@ -1519,18 +1519,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 } else {
                     // Garantir que o select tenha o name correto
                     const original = categoriaField.getAttribute('data-original-name');
-                    categoriaField.name = original || 'mauticform[categoria]';
-                    const hidden = document.getElementById('mauticform_hidden_categoria');
+                    categoriaField.name = original || 'cj-form[categoria]';
+                    const hidden = document.getElementById('cj-form-hidden-categoria');
                     if (hidden) hidden.remove();
                     categoriaField.disabled = false;
                 }
             }
-            // Forçar estado/cidade com alias corretos do Mautic
-            const estadoEl = document.getElementById('mauticform_input_formlp_estado');
-            const cidadeEl = document.getElementById('mauticform_input_formlp_cidade');
-            const estadoAlias = (mauticForm && mauticForm.dataset && mauticForm.dataset.mauticEstadoAlias) ? mauticForm.dataset.mauticEstadoAlias : 'estado';
-            const cidadeAlias = (mauticForm && mauticForm.dataset && mauticForm.dataset.mauticCidadeAlias) ? mauticForm.dataset.mauticCidadeAlias : 'cidade';
-            const categoriaAlias = (mauticForm && mauticForm.dataset && mauticForm.dataset.mauticCategoriaAlias) ? mauticForm.dataset.mauticCategoriaAlias : 'categoria';
+            // Forçar estado/cidade com alias corretos
+            const estadoEl = document.getElementById('cj-form-estado');
+            const cidadeEl = document.getElementById('cj-form-cidade');
+            const estadoAlias = (cadastroForm && cadastroForm.dataset && cadastroForm.dataset.estadoAlias) ? cadastroForm.dataset.estadoAlias : 'estado';
+            const cidadeAlias = (cadastroForm && cadastroForm.dataset && cadastroForm.dataset.cidadeAlias) ? cadastroForm.dataset.cidadeAlias : 'cidade';
+            const categoriaAlias = (cadastroForm && cadastroForm.dataset && cadastroForm.dataset.categoriaAlias) ? cadastroForm.dataset.categoriaAlias : 'categoria';
 
             if (estadoEl) {
                 let estadoValor = estadoEl.value;
@@ -1542,14 +1542,14 @@ document.addEventListener('DOMContentLoaded', function() {
                         estadoValor = removeAccents(nomeParte.trim());
                     }
                 }
-                let hiddenUf = document.getElementById('mauticform_hidden_estado');
+                let hiddenUf = document.getElementById('cj-form-hidden-estado');
                 if (!hiddenUf) {
                     hiddenUf = document.createElement('input');
                     hiddenUf.type = 'hidden';
-                    hiddenUf.id = 'mauticform_hidden_estado';
-                    mauticForm.appendChild(hiddenUf);
+                    hiddenUf.id = 'cj-form-hidden-estado';
+                    cadastroForm.appendChild(hiddenUf);
                 }
-                hiddenUf.name = `mauticform[${estadoAlias}]`;
+                hiddenUf.name = `cj-form[${estadoAlias}]`;
                 hiddenUf.value = estadoValor;
                 estadoEl.setAttribute('data-original-name', estadoEl.getAttribute('name') || '');
                 estadoEl.removeAttribute('name');
@@ -1557,14 +1557,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if (cidadeEl) {
                 let cidadeValor = cidadeEl.value || '';
-                let hiddenCid = document.getElementById('mauticform_hidden_cidade');
+                let hiddenCid = document.getElementById('cj-form-hidden-cidade');
                 if (!hiddenCid) {
                     hiddenCid = document.createElement('input');
                     hiddenCid.type = 'hidden';
-                    hiddenCid.id = 'mauticform_hidden_cidade';
-                    mauticForm.appendChild(hiddenCid);
+                    hiddenCid.id = 'cj-form-hidden-cidade';
+                    cadastroForm.appendChild(hiddenCid);
                 }
-                hiddenCid.name = `mauticform[${cidadeAlias}]`;
+                hiddenCid.name = `cj-form[${cidadeAlias}]`;
                 hiddenCid.value = cidadeValor;
                 cidadeEl.setAttribute('data-original-name', cidadeEl.getAttribute('name') || '');
                 cidadeEl.removeAttribute('name');
@@ -1585,29 +1585,29 @@ document.addEventListener('DOMContentLoaded', function() {
                 };
 
                 // Campos principais
-                appendToFormData('mauticform[nome]', document.getElementById('mauticform_input_formlp_nome')?.value || '');
-                appendToFormData('mauticform[email]', document.getElementById('mauticform_input_formlp_email')?.value || '');
-                appendToFormData('mauticform[senha]', document.getElementById('mauticform_input_formlp_senha')?.value || '');
+                appendToFormData('cj-form[nome]', document.getElementById('cj-form-nome')?.value || '');
+                appendToFormData('cj-form[email]', document.getElementById('cj-form-email')?.value || '');
+                appendToFormData('cj-form[senha]', document.getElementById('cj-form-senha')?.value || '');
                 // WhatsApp: enviar sem +55 (apenas DDD + número)
                 (function(){
-                    const pf = document.getElementById('mauticform_input_formlp_whatsapp');
+                    const pf = document.getElementById('cj-form-whatsapp');
                     const raw = (pf?.value || '').toString();
                     let digits = raw.replace(/\D/g, '');
                     if (digits.startsWith('55') && digits.length >= 12) digits = digits.slice(2);
                     if (digits.length > 11) digits = digits.slice(-11);
-                    appendToFormData('mauticform[whatsapp]', digits);
+                    appendToFormData('cj-form[whatsapp]', digits);
                 })();
 
                 // Estado e cidade (usar alias corretos por formulário)
-                const estadoHidden = document.getElementById('mauticform_hidden_estado');
-                const estadoVal = estadoHidden ? estadoHidden.value : (document.getElementById('mauticform_input_formlp_estado')?.value || '');
-                appendToFormData(`mauticform[${estadoAlias}]`, estadoVal);
-                appendToFormData(`mauticform[${cidadeAlias}]`, document.getElementById('mauticform_input_formlp_cidade')?.value || '');
+                const estadoHidden = document.getElementById('cj-form-hidden-estado');
+                const estadoVal = estadoHidden ? estadoHidden.value : (document.getElementById('cj-form-estado')?.value || '');
+                appendToFormData(`cj-form[${estadoAlias}]`, estadoVal);
+                appendToFormData(`cj-form[${cidadeAlias}]`, document.getElementById('cj-form-cidade')?.value || '');
 
                 // Categoria única
-                let categoriaStr = document.getElementById('mauticform_hidden_categoria')?.value;
+                let categoriaStr = document.getElementById('cj-form-hidden-categoria')?.value;
                 if (!categoriaStr) {
-                    const categoriaField = document.getElementById('mauticform_input_formlp_categoria');
+                    const categoriaField = document.getElementById('cj-form-categoria');
                     let values = [];
                     if (categoriaField) {
                         if (typeof $ !== 'undefined') {
@@ -1615,7 +1615,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         } else {
                             values = Array.from(categoriaField.selectedOptions).map(o => o.value);
                         }
-                        const outrosInput = document.getElementById('mauticform_input_formlp_categoria_outros');
+                        const outrosInput = document.getElementById('cj-form-categoria_outros');
                         if (values.includes('Outros')) {
                             const customVal = (outrosInput && outrosInput.value.trim()) ? outrosInput.value.trim() : '';
                             values = values.filter(v => v !== 'Outros');
@@ -1626,30 +1626,30 @@ document.addEventListener('DOMContentLoaded', function() {
                     values = values.filter(v => (v || '').trim().length > 0);
                     categoriaStr = values.join(sep);
                 }
-                appendToFormData(`mauticform[${categoriaAlias}]`, categoriaStr);
+                appendToFormData(`cj-form[${categoriaAlias}]`, categoriaStr);
 
                 // Consentimento
-                appendToFormData('mauticform[consent]', document.getElementById('mauticform_input_formlp_consent')?.checked ? 'on' : '');
+                appendToFormData('cj-form[consent]', document.getElementById('cj-form-consent')?.checked ? 'on' : '');
 
                 // Cidades Próximas (apenas para prestadores)
-                appendToFormData('mauticform[cidades_proximas]', document.getElementById('mauticform_input_formlp_cidades_proximas')?.checked ? 'Sim' : '');
+                appendToFormData('cj-form[cidades_proximas]', document.getElementById('cj-form-cidades_proximas')?.checked ? 'Sim' : '');
 
-                // Campos ocultos do Mautic
-                appendToFormData('mauticform[formId]', document.getElementById('mauticform_formlp_id')?.value || '');
-                appendToFormData('mauticform[return]', document.getElementById('mauticform_formlp_return')?.value || '');
-                appendToFormData('mauticform[formName]', document.getElementById('mauticform_formlp_name')?.value || '');
-                appendToFormData('mauticform[submit]', '1');
+                // Campos ocultos do formulário
+                appendToFormData('cj-form[formId]', document.getElementById('cj-form-main_id')?.value || '');
+                appendToFormData('cj-form[return]', document.getElementById('cj-form-main_return')?.value || '');
+                appendToFormData('cj-form[formName]', document.getElementById('cj-form-main_name')?.value || '');
+                appendToFormData('cj-form[submit]', '1');
 
                 // Tentar enviar com fetch primeiro
                 console.log('Enviando formulário via fetch...');
-                console.log('URL do formulário:', mauticForm.action);
+                console.log('URL do formulário:', cadastroForm.action);
                 try {
                     console.log('FormData entries:');
                     for (const [k, v] of formData.entries()) {
                         console.log(' -', k, ':', v);
                     }
                 } catch (e) { console.log('Não foi possível iterar FormData'); }
-                fetch(mauticForm.action, {
+                fetch(cadastroForm.action, {
                     method: 'POST',
                     body: formData,
                     mode: 'no-cors' // Para evitar problemas de CORS
@@ -1674,20 +1674,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 function submitViaIframe() {
                     const tmp = document.createElement('form');
                     tmp.method = 'POST';
-                    tmp.action = mauticForm.action;
+                    tmp.action = cadastroForm.action;
                     tmp.style.display = 'none';
                     tmp.enctype = 'multipart/form-data';
 
                     // Enviar para um iframe oculto para não navegar e permitir sucesso local
-                    let iframe = document.getElementById('mautic_hidden_iframe');
+                    let iframe = document.getElementById('cj-hidden-iframe');
                     if (!iframe) {
                         iframe = document.createElement('iframe');
-                        iframe.id = 'mautic_hidden_iframe';
-                        iframe.name = 'mautic_hidden_iframe';
+                        iframe.id = 'cj-hidden-iframe';
+                        iframe.name = 'cj-hidden-iframe';
                         iframe.style.display = 'none';
                         document.body.appendChild(iframe);
                     }
-                    tmp.target = 'mautic_hidden_iframe';
+                    tmp.target = 'cj-hidden-iframe';
 
                     const appendHidden = (name, value) => {
                         if (value === undefined || value === null) return;
@@ -1698,25 +1698,25 @@ document.addEventListener('DOMContentLoaded', function() {
                         tmp.appendChild(input);
                     };
 
-                    // Copiar campos ocultos adicionais do Mautic (exceto os que vamos reconstruir)
+                    // Copiar campos ocultos adicionais do formulário (exceto os que vamos reconstruir)
                     const skipNames = new Set([
-                        'mauticform[nome]',
-                        'mauticform[whatsapp]',
-                        `mauticform[${estadoAlias}]`,
-                        `mauticform[${cidadeAlias}]`,
-                        `mauticform[${categoriaAlias}]`,
-                        'mauticform[consent]',
-                        'mauticform[formId]',
-                        'mauticform[return]',
-                        'mauticform[formName]',
-                        'mauticform[submit]'
+                        'cj-form[nome]',
+                        'cj-form[whatsapp]',
+                        `cj-form[${estadoAlias}]`,
+                        `cj-form[${cidadeAlias}]`,
+                        `cj-form[${categoriaAlias}]`,
+                        'cj-form[consent]',
+                        'cj-form[formId]',
+                        'cj-form[return]',
+                        'cj-form[formName]',
+                        'cj-form[submit]'
                     ]);
-                    const elems = mauticForm.querySelectorAll('input, select, textarea');
+                    const elems = cadastroForm.querySelectorAll('input, select, textarea');
                     elems.forEach(el => {
                         const name = el.getAttribute('name');
-                        if (!name || !name.startsWith('mauticform[')) return;
+                        if (!name || !name.startsWith('cj-form[')) return;
                         if (skipNames.has(name)) return;
-                        if (name === `mauticform[${categoriaAlias}]`) return;
+                        if (name === `cj-form[${categoriaAlias}]`) return;
                         if (el.type === 'checkbox' || el.type === 'radio') {
                             if (!el.checked) return;
                             appendHidden(name, el.value || 'on');
@@ -1735,29 +1735,29 @@ document.addEventListener('DOMContentLoaded', function() {
                     });
 
                     // Campos principais
-                    appendHidden('mauticform[nome]', document.getElementById('mauticform_input_formlp_nome')?.value || '');
-                    appendHidden('mauticform[email]', document.getElementById('mauticform_input_formlp_email')?.value || '');
-                    appendHidden('mauticform[senha]', document.getElementById('mauticform_input_formlp_senha')?.value || '');
+                    appendHidden('cj-form[nome]', document.getElementById('cj-form-nome')?.value || '');
+                    appendHidden('cj-form[email]', document.getElementById('cj-form-email')?.value || '');
+                    appendHidden('cj-form[senha]', document.getElementById('cj-form-senha')?.value || '');
                     // WhatsApp: enviar apenas DDD + número (sem +55)
                     (function(){
-                        const pf = document.getElementById('mauticform_input_formlp_whatsapp');
+                        const pf = document.getElementById('cj-form-whatsapp');
                         const raw = (pf?.value || '').toString();
                         let digits = raw.replace(/\D/g, '');
                         if (digits.startsWith('55') && digits.length >= 12) digits = digits.slice(2);
                         if (digits.length > 11) digits = digits.slice(-11);
-                        appendHidden('mauticform[whatsapp]', digits);
+                        appendHidden('cj-form[whatsapp]', digits);
                     })();
 
                     // Estado e cidade (estado já normalizado acima em hiddenUf)
-                    const estadoHidden = document.getElementById('mauticform_hidden_estado');
-                    const estadoVal = estadoHidden ? estadoHidden.value : (document.getElementById('mauticform_input_formlp_estado')?.value || '');
-                    appendHidden(`mauticform[${estadoAlias}]`, estadoVal);
-                    appendHidden(`mauticform[${cidadeAlias}]`, document.getElementById('mauticform_input_formlp_cidade')?.value || '');
+                    const estadoHidden = document.getElementById('cj-form-hidden-estado');
+                    const estadoVal = estadoHidden ? estadoHidden.value : (document.getElementById('cj-form-estado')?.value || '');
+                    appendHidden(`cj-form[${estadoAlias}]`, estadoVal);
+                    appendHidden(`cj-form[${cidadeAlias}]`, document.getElementById('cj-form-cidade')?.value || '');
 
                     // Categoria única (do hidden que montamos ou montando agora)
-                    let categoriaStr = document.getElementById('mauticform_hidden_categoria')?.value;
+                    let categoriaStr = document.getElementById('cj-form-hidden-categoria')?.value;
                     if (!categoriaStr) {
-                        const categoriaField = document.getElementById('mauticform_input_formlp_categoria');
+                        const categoriaField = document.getElementById('cj-form-categoria');
                         let values = [];
                         if (categoriaField) {
                             if (typeof $ !== 'undefined') {
@@ -1765,7 +1765,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             } else {
                                 values = Array.from(categoriaField.selectedOptions).map(o => o.value);
                             }
-                            const outrosInput = document.getElementById('mauticform_input_formlp_categoria_outros');
+                            const outrosInput = document.getElementById('cj-form-categoria_outros');
                             if (values.includes('Outros')) {
                                 const customVal = (outrosInput && outrosInput.value.trim()) ? outrosInput.value.trim() : '';
                                 values = values.filter(v => v !== 'Outros');
@@ -1776,24 +1776,24 @@ document.addEventListener('DOMContentLoaded', function() {
                         values = values.filter(v => (v || '').trim().length > 0);
                         categoriaStr = values.join(sep);
                     }
-                    appendHidden(`mauticform[${categoriaAlias}]`, categoriaStr);
+                    appendHidden(`cj-form[${categoriaAlias}]`, categoriaStr);
 
                     // Consentimento
-                    appendHidden('mauticform[consent]', document.getElementById('mauticform_input_formlp_consent')?.checked ? 'on' : '');
+                    appendHidden('cj-form[consent]', document.getElementById('cj-form-consent')?.checked ? 'on' : '');
 
                     // Cidades Próximas (apenas para prestadores)
-                    appendHidden('mauticform[cidades_proximas]', document.getElementById('mauticform_input_formlp_cidades_proximas')?.checked ? 'Sim' : '');
+                    appendHidden('cj-form[cidades_proximas]', document.getElementById('cj-form-cidades_proximas')?.checked ? 'Sim' : '');
 
-                    // Campos ocultos do Mautic
-                    appendHidden('mauticform[formId]', document.getElementById('mauticform_formlp_id')?.value || '');
-                    appendHidden('mauticform[return]', document.getElementById('mauticform_formlp_return')?.value || '');
-                    appendHidden('mauticform[formName]', document.getElementById('mauticform_formlp_name')?.value || '');
-                    // Botão de submit (Mautic pode exigir este campo)
-                    appendHidden('mauticform[submit]', '1');
+                    // Campos ocultos do formulário
+                    appendHidden('cj-form[formId]', document.getElementById('cj-form-main_id')?.value || '');
+                    appendHidden('cj-form[return]', document.getElementById('cj-form-main_return')?.value || '');
+                    appendHidden('cj-form[formName]', document.getElementById('cj-form-main_name')?.value || '');
+                    // Botão de submit
+                    appendHidden('cj-form[submit]', '1');
 
                     // Alguns ambientes adicionam messenger; se existir, levar junto
-                    const messenger = document.querySelector('input[name="mauticform[messenger]"]');
-                    if (messenger) appendHidden('mauticform[messenger]', messenger.value);
+                    const messenger = document.querySelector('input[name="cj-form[messenger]"]');
+                    if (messenger) appendHidden('cj-form[messenger]', messenger.value);
 
                     document.body.appendChild(tmp);
                     
@@ -1862,11 +1862,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 };
 
-                // Ouvir postMessage do Mautic (resposta inclui success:1)
+                // Ouvir postMessage do formulário (resposta inclui success:1)
                 const onMessage = (ev) => {
                     try {
                         // Validar origem quando possível
-                        if (ev.origin && !/mautic\./.test(ev.origin) && !/indiqueiapp/.test(ev.origin)) return;
+                        
                         const data = typeof ev.data === 'string' ? JSON.parse(ev.data) : ev.data;
                         if (data && data.formName === 'formlp') {
                             window.removeEventListener('message', onMessage);
@@ -2501,16 +2501,16 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Signup button opens registration/mautic modal based on role
+    // Signup button opens registration modal based on role
     if (openSigninBtn) {
         openSigninBtn.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
             
-            // Para prestadores, abrir mauticModal; para clientes, abrir registrationModal
-            const mauticModalElement = document.getElementById('mauticModal');
+            // Para prestadores, abrir cadastroModal; para clientes, abrir registrationModal
+            const prestadorModalElement = document.getElementById('cadastroModal');
             const registrationModalElement = document.getElementById('registrationModal');
-            const targetModal = role === 'prestador' ? mauticModalElement : registrationModalElement;
+            const targetModal = role === 'prestador' ? prestadorModalElement : registrationModalElement;
             
             if (targetModal) {
                 // Resetar estilos
@@ -2547,7 +2547,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     }, 100);
                 }
             } else {
-                console.error('Modal não encontrado. Role:', role, 'Prestador Modal:', !!mauticModalElement, 'Cliente Modal:', !!registrationModalElement);
+                console.error('Modal não encontrado. Role:', role, 'Prestador Modal:', !!prestadorModalElement, 'Cliente Modal:', !!registrationModalElement);
             }
         });
     }
@@ -2804,7 +2804,7 @@ function previewFoto(input) {
 }
 
 function removeFoto() {
-    const input = document.getElementById('mauticform_input_formlp_foto');
+    const input = document.getElementById('cj-form-foto');
     const preview = input.parentElement.querySelector('.foto-preview');
     const uploadLabel = input.parentElement.querySelector('.file-upload-label');
     

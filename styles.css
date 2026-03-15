@@ -72,16 +72,16 @@ html.dark .benefit-card {
 }
 
 html.dark .form-group input,
-html.dark .mauticform-input,
-html.dark .mauticform-selectbox {
+html.dark .cj-form-input,
+html.dark .cj-form-select {
     background: #1a1a1a;
     border-color: #444;
     color: #fff;
 }
 
 html.dark .form-group input:focus,
-html.dark .mauticform-input:focus,
-html.dark .mauticform-selectbox:focus {
+html.dark .cj-form-input:focus,
+html.dark .cj-form-select:focus {
     border-color: var(--primary-green);
     box-shadow: 0 0 0 3px rgba(46, 168, 110, 0.1);
 }
@@ -199,25 +199,25 @@ html.dark .footer-text p {
 
 html.dark .form-group label,
 html.dark .form-group input,
-html.dark .mauticform-label,
-html.dark .mauticform-input,
-html.dark .mauticform-selectbox,
-html.dark .mauticform-textarea {
+html.dark .cj-form-label,
+html.dark .cj-form-input,
+html.dark .cj-form-select,
+html.dark .cj-form-textarea {
     color: #fff;
 }
 
 html.dark .form-group input,
-html.dark .mauticform-input,
-html.dark .mauticform-selectbox,
-html.dark .mauticform-textarea {
+html.dark .cj-form-input,
+html.dark .cj-form-select,
+html.dark .cj-form-textarea {
     background: #1a1a1a;
     border-color: #444;
 }
 
 html.dark .form-group input:focus,
-html.dark .mauticform-input:focus,
-html.dark .mauticform-selectbox:focus,
-html.dark .mauticform-textarea:focus {
+html.dark .cj-form-input:focus,
+html.dark .cj-form-select:focus,
+html.dark .cj-form-textarea:focus {
     border-color: var(--primary-green);
     background: #1a1a1a;
 }
@@ -1591,7 +1591,7 @@ main {
 }
 
 /* Select nativo customizado */
-.mauticform-selectbox {
+.cj-form-select {
     width: 100%;
     padding: 12px;
     border: 2px solid #e1e5e9;
@@ -1611,17 +1611,17 @@ main {
     color: #000;
 }
 
-.mauticform-selectbox:focus {
+.cj-form-select:focus {
     outline: none;
     border-color: var(--primary-green);
     box-shadow: 0 0 0 3px rgba(120, 205, 147, 0.1);
 }
 
-.mauticform-selectbox:hover {
+.cj-form-select:hover {
     border-color: var(--primary-green);
 }
 
-.mauticform-selectbox option {
+.cj-form-select option {
     padding: 12px 16px;
     font-family: 'Red Hat Display', sans-serif;
     font-size: 16px;
@@ -1629,30 +1629,30 @@ main {
     background: #fff;
 }
 
-.mauticform-selectbox option:first-child {
+.cj-form-select option:first-child {
     color: #999;
 }
 
-/* Dark mode styles for mauticform selectbox */
-.dark .mauticform-selectbox {
+/* Dark mode styles for form select */
+.dark .cj-form-select {
     background: #1a1a1a;
     border-color: #444;
     color: #fff;
     background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
 }
 
-.dark .mauticform-selectbox option {
+.dark .cj-form-select option {
     color: #fff;
     background: #2a2a2a;
 }
 
-.dark .mauticform-selectbox:hover {
+.dark .cj-form-select:hover {
     border-color: var(--primary-green);
 }
 
 /* Responsive adjustments for select */
 @media (max-width: 768px) {
-    .mauticform-selectbox {
+    .cj-form-select {
         padding: 14px;
         font-size: 16px;
         padding-right: 48px;
@@ -1757,18 +1757,18 @@ main {
         flex-direction: column;
     }
     
-    .mauticform-row {
+    .cj-form-row {
         margin-bottom: 12px;
     }
     
-    .mauticform-label {
+    .cj-form-label {
         font-size: 14px;
         margin-bottom: 4px;
     }
     
-    .mauticform-input,
-    .mauticform-selectbox,
-    .mauticform-textarea {
+    .cj-form-input,
+    .cj-form-select,
+    .cj-form-textarea {
         padding: 12px;
         font-size: 16px;
     }
@@ -1784,21 +1784,21 @@ main {
         margin: 4px 0 !important;
     }
     
-    .mauticform_wrapper {
+    .cj-form-wrapper {
         flex: 1;
         display: flex;
         flex-direction: column;
         overflow: hidden;
     }
     
-    .mauticform-innerform {
+    .cj-form-innerform {
         flex: 1;
         display: flex;
         flex-direction: column;
         overflow: hidden;
     }
     
-    .mauticform-page-wrapper {
+    .cj-form-page-wrapper {
         flex: 1 !important;
         display: flex !important;
         flex-direction: column !important;
@@ -1806,12 +1806,12 @@ main {
         min-height: 0 !important;
     }
     
-    .mauticform-row {
+    .cj-form-row {
         margin-bottom: 16px;
     }
     
     /* Garantir que o botão seja sempre visível */
-    #mauticform_formlp_submit {
+    #cj-form-submit {
         position: fixed !important;
         bottom: 0 !important;
         left: 0 !important;
@@ -1823,7 +1823,7 @@ main {
         margin: 0 !important;
     }
     
-    .mauticform-button-wrapper {
+    .cj-form-button-wrapper {
         flex-shrink: 0 !important;
         background: white !important;
         padding: 12px 0 6px 0 !important;
@@ -1835,7 +1835,7 @@ main {
         display: block !important;
     }
     
-    .mauticform-button {
+    .cj-form-button {
         width: 100% !important;
         padding: 14px 24px !important;
         font-size: 16px !important;
@@ -1880,11 +1880,11 @@ main {
         font-size: 16px;
     }
     
-    .mauticform-checkbox {
+    .cj-form-checkbox {
         margin-top: 8px;
     }
     
-    .mauticform-checkbox label {
+    .cj-form-checkbox label {
         font-size: 14px;
         line-height: 1.4;
     }
@@ -1934,37 +1934,37 @@ main {
         flex-direction: column;
     }
     
-    .mauticform-row {
+    .cj-form-row {
         margin-bottom: 10px;
     }
     
-    .mauticform-label {
+    .cj-form-label {
         font-size: 13px;
         margin-bottom: 3px;
     }
     
-    .mauticform-input,
-    .mauticform-selectbox,
-    .mauticform-textarea {
+    .cj-form-input,
+    .cj-form-select,
+    .cj-form-textarea {
         padding: 10px;
         font-size: 16px;
     }
     
-    .mauticform_wrapper {
+    .cj-form-wrapper {
         flex: 1;
         display: flex;
         flex-direction: column;
         overflow: hidden;
     }
     
-    .mauticform-innerform {
+    .cj-form-innerform {
         flex: 1;
         display: flex;
         flex-direction: column;
         overflow: hidden;
     }
     
-    .mauticform-page-wrapper {
+    .cj-form-page-wrapper {
         flex: 1 !important;
         display: flex !important;
         flex-direction: column !important;
@@ -1972,12 +1972,12 @@ main {
         min-height: 0 !important;
     }
     
-    .mauticform-row {
+    .cj-form-row {
         margin-bottom: 12px;
     }
     
     /* Garantir que o botão seja sempre visível */
-    #mauticform_formlp_submit {
+    #cj-form-submit {
         position: fixed !important;
         bottom: 0 !important;
         left: 0 !important;
@@ -1989,7 +1989,7 @@ main {
         margin: 0 !important;
     }
     
-    .mauticform-button-wrapper {
+    .cj-form-button-wrapper {
         flex-shrink: 0 !important;
         background: white !important;
         padding: 10px 0 5px 0 !important;
@@ -2001,7 +2001,7 @@ main {
         display: block !important;
     }
     
-    .mauticform-button {
+    .cj-form-button {
         width: 100% !important;
         padding: 12px 20px !important;
         font-size: 16px !important;
@@ -2009,11 +2009,11 @@ main {
         margin: 0 !important;
     }
     
-    .mauticform-checkbox {
+    .cj-form-checkbox {
         margin-top: 6px;
     }
     
-    .mauticform-checkbox label {
+    .cj-form-checkbox label {
         font-size: 13px;
         line-height: 1.3;
     }
@@ -2027,9 +2027,9 @@ main {
         font-size: 16px;
     }
     
-    .mauticform-input,
-    .mauticform-selectbox,
-    .mauticform-textarea {
+    .cj-form-input,
+    .cj-form-select,
+    .cj-form-textarea {
         padding: 12px;
         font-size: 16px;
     }
@@ -2232,8 +2232,8 @@ main {
     transform: translateY(0) scale(1);
 }
 
-/* Mautic Form Styles */
-.mauticform_wrapper { 
+/* Form Styles */
+.cj-form-wrapper { 
     max-width: 100%; 
     margin: 0 auto;
     display: flex;
@@ -2242,14 +2242,14 @@ main {
     min-height: 0;
 }
 
-.mauticform-innerform {
+.cj-form-innerform {
     display: flex;
     flex-direction: column;
     height: 100%;
     min-height: 0;
 }
 
-.mauticform-page-wrapper {
+.cj-form-page-wrapper {
     display: flex;
     flex-direction: column;
     flex: 1;
@@ -2257,18 +2257,18 @@ main {
     overflow-y: auto;
 }
 
-.mauticform-name { 
+.cj-form-name { 
     font-weight: bold; 
     font-size: 1.5em; 
     margin-bottom: 3px; 
 }
 
-.mauticform-description { 
+.cj-form-description { 
     margin-top: 2px; 
     margin-bottom: 10px; 
 }
 
-.mauticform-error { 
+.cj-form-error { 
     margin-bottom: 10px; 
     color: #ff6b6b; 
     background: #ffe6e6;
@@ -2277,7 +2277,7 @@ main {
     border-left: 4px solid #ff6b6b;
 }
 
-.mauticform-message { 
+.cj-form-message { 
     margin-bottom: 10px; 
     color: var(--primary-green); 
     background: #f0f9f0;
@@ -2286,12 +2286,12 @@ main {
     border-left: 4px solid var(--primary-green);
 }
 
-.mauticform-row { 
+.cj-form-row { 
     display: block; 
     margin-bottom: 16px; 
 }
 
-.mauticform-label { 
+.cj-form-label { 
     font-size: 15px; 
     display: block; 
     font-weight: 600; 
@@ -2299,27 +2299,27 @@ main {
     color: var(--text-dark);
 }
 
-.mauticform-row.mauticform-required .mauticform-label:after { 
+.cj-form-row.cj-form-required .cj-form-label:after { 
     color: #ff6b6b; 
     content: " *"; 
     display: inline; 
 }
 
-.mauticform-helpmessage { 
+.cj-form-helpmessage { 
     display: block; 
     font-size: 14px; 
     margin-bottom: 3px; 
     color: var(--text-gray);
 }
 
-.mauticform-errormsg { 
+.cj-form-errormsg { 
     display: block; 
     color: #ff6b6b; 
     margin-top: 4px; 
     font-size: 14px;
 }
 
-.mauticform-helptext {
+.cj-form-helptext {
     display: block;
     color: var(--text-gray);
     margin-top: 6px;
@@ -2327,8 +2327,8 @@ main {
     font-style: italic;
 }
 
-.mauticform-input, 
-.mauticform-textarea { 
+.cj-form-input, 
+.cj-form-textarea { 
     width: 100%; 
     padding: 12px; 
     border: 2px solid #e1e5e9; 
@@ -2341,35 +2341,35 @@ main {
     transition: border-color 0.3s, box-shadow 0.3s;
 }
 
-.mauticform-input:focus, 
-.mauticform-textarea:focus { 
+.cj-form-input:focus, 
+.cj-form-textarea:focus { 
     outline: none;
     border-color: var(--primary-green);
     box-shadow: 0 0 0 3px rgba(120, 205, 147, 0.1);
 }
 
-.mauticform-checkboxgrp-label { 
+.cj-form-checkboxgrp-label { 
     font-weight: normal; 
 }
 
-.mauticform-radiogrp-label { 
+.cj-form-radiogrp-label { 
     font-weight: normal; 
 }
 
-.mauticform-button-wrapper .mauticform-button.btn-ghost, 
-.mauticform-pagebreak-wrapper .mauticform-pagebreak.btn-ghost { 
+.cj-form-button-wrapper .cj-form-button.btn-ghost, 
+.cj-form-pagebreak-wrapper .cj-form-pagebreak.btn-ghost { 
     color: #5d6c7c;
     background-color: #ffffff;
     border-color: #dddddd;
 }
 
-.mauticform-button-wrapper {
+.cj-form-button-wrapper {
     margin-top: auto !important;
     flex-shrink: 0 !important;
 }
 
-.mauticform-button-wrapper .mauticform-button, 
-.mauticform-pagebreak-wrapper .mauticform-pagebreak { 
+.cj-form-button-wrapper .cj-form-button, 
+.cj-form-pagebreak-wrapper .cj-form-pagebreak { 
     display: inline-block;
     margin-bottom: 0;
     font-weight: 600;
@@ -2391,24 +2391,24 @@ main {
     font-family: 'Red Hat Display', sans-serif;
 }
 
-.mauticform-button-wrapper .mauticform-button.btn-ghost[disabled], 
-.mauticform-pagebreak-wrapper .mauticform-pagebreak.btn-ghost[disabled] { 
+.cj-form-button-wrapper .cj-form-button.btn-ghost[disabled], 
+.cj-form-pagebreak-wrapper .cj-form-pagebreak.btn-ghost[disabled] { 
     background-color: #ffffff; 
     border-color: #dddddd; 
     opacity: 0.75; 
     cursor: not-allowed; 
 }
 
-.mauticform-pagebreak-wrapper .mauticform-button-wrapper { 
+.cj-form-pagebreak-wrapper .cj-form-button-wrapper { 
     display: inline; 
 }
 
-.mauticform-field-hidden { 
+.cj-form-fieldhidden { 
     display: none; 
 }
 
 /* Custom button styling for the form */
-.mauticform-button {
+.cj-form-button {
     background: var(--primary-green) !important;
     color: white !important;
     border: none !important;
@@ -2420,13 +2420,13 @@ main {
     overflow: hidden !important;
 }
 
-.mauticform-button:hover {
+.cj-form-button:hover {
     background: #6bbd85 !important;
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-.mauticform-button:disabled {
+.cj-form-button:disabled {
     background: #ccc !important;
     cursor: not-allowed !important;
     transform: none !important;
@@ -2528,12 +2528,12 @@ main {
     border-radius: 8px 0 0 8px;
 }
 
-.mauticform-input[type="tel"] {
+.cj-form-input[type="tel"] {
     border-radius: 0 8px 8px 0;
     border-left: none;
 }
 
-.mauticform-input[type="tel"]:focus {
+.cj-form-input[type="tel"]:focus {
     border-left: none;
 }
 
@@ -2797,7 +2797,7 @@ main {
 
 /* ==================== ESTILOS PARA UPLOAD DE FOTO ==================== */
 
-.mauticform-file {
+.cj-form-file {
     display: flex;
     flex-direction: column;
     gap: 12px;
